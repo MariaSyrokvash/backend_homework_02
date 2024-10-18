@@ -73,5 +73,5 @@ export const updatePostValidators = [
 
 export const deletePostValidators = [
     adminMiddleware,
-    findBlogValidator,
+    findPostValidator,
 ]

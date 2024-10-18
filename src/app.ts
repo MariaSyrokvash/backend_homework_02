@@ -1,5 +1,10 @@
 import express from 'express'
 import cors from 'cors'
+import {CONFIG} from "./config";
+
+import {blogsRouter} from "./features/blogs";
+import {postsRouter} from "./features/posts";
+import {testingRouter} from "./features/testing";
 
 
 export const app = express() // создать приложение
@@ -10,3 +15,7 @@ app.use(cors()) // разрешить любым фронтам делать з�
 app.get('/', (req, res) => {
     res.status(200).json({version: '1.0'})
 })
+
+app.use(CONFIG.PATH.BLOGS, blogsRouter)
+app.use(CONFIG.PATH.POSTS, postsRouter)
+app.use(CONFIG.PATH.TESTING, testingRouter)

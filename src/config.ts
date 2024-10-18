@@ -4,7 +4,9 @@ config() // добавление переменных из файла .env в pr
 export const CONFIG = {
     PORT: process.env.PORT || 3003,
     PATH: {
-        VIDEOS: '/videos',
-        TEST: '/testing/all-data',
+        BLOGS: '/blogs',
+        POSTS: '/posts',
+        TESTING: '/testing/all-data',
     },
+    ADMIN: process.env.ADMIN || 'admin:qwerty',
 }

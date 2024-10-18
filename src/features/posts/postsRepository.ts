@@ -31,7 +31,7 @@ export const postsRepository = {
         if (postIndex === -1) {
             return false;
         }
-        db.blogs.splice(postIndex, 1);
+        db.posts.splice(postIndex, 1);
         return true;
     },
     updatePost(post: PostInputModel, id: string) {

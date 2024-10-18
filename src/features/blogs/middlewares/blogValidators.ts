@@ -17,17 +17,17 @@ import {
 
 export const nameValidator = body('name')
     .isString().withMessage('not string')
-    .trim().isLength({min: MinLength, max: MaxLengthBlogName}).withMessage(`more 0 and less ${MaxLengthBlogName}`)
+    .trim().isLength({min: MinLength, max: MaxLengthBlogName}).withMessage(`more then ${MaxLengthBlogName} or 0`)
 
 
 export const descriptionValidator = body('description')
     .isString().withMessage('not string')
-    .trim().isLength({min: MinLength, max: MaxLengthBlogDescription}).withMessage('more then 500 or 0')
+    .trim().isLength({min: MinLength, max: MaxLengthBlogDescription}).withMessage(`more then ${MaxLengthBlogDescription} or 0`)
 
 export const websiteUrlValidator = body('websiteUrl')
     .isString().withMessage('not string')
     .trim().isURL().withMessage('not url')
-    .isLength({min: MinLength, max: MaxLengthBlogWebsiteUrl}).withMessage('more then 100 or 0')
+    .isLength({min: MinLength, max: MaxLengthBlogWebsiteUrl}).withMessage(`more then ${MaxLengthBlogWebsiteUrl} or 0`)
 
 export const findBlogValidator = (req: Request<{id: string}>, res: Response, next: NextFunction) => {
     const blog = blogsRepository.find(req.params.id)
@@ -38,13 +38,32 @@ export const findBlogValidator = (req: Request<{id: string}>, res: Response, nex
     next()
 }
 
-
-export const blogValidators = [
-    adminMiddleware,
-
+const commonBlogValidators = [
     nameValidator,
     descriptionValidator,
     websiteUrlValidator,
 
     inputCheckErrorsMiddleware,
+];
+
+export const getBlogValidators = [
+    findBlogValidator,
+]
+
+
+export const createBlogValidators = [
+    adminMiddleware,
+    ...commonBlogValidators
+]
+
+
+export const updateBlogValidators = [
+    adminMiddleware,
+    findBlogValidator,
+    ...commonBlogValidators,
+]
+
+export const deleteBlogValidators = [
+    adminMiddleware,
+    findBlogValidator,
 ]

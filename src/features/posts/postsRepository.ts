@@ -26,12 +26,23 @@ export const postsRepository = {
     getAll() {
         return db.posts.map(p => this.map(p))
     },
-    del(id: string) {
-
+    deletePost(id: string) {
+        const postIndex = db.posts.findIndex(b => b.id === id);
+        if (postIndex === -1) {
+            return false;
+        }
+        db.blogs.splice(postIndex, 1);
+        return true;
     },
-    put(post: PostInputModel, id: string) {
-        const blog = blogsRepository.find(post.blogId)!
-        db.posts = db.posts.map(p => p.id === id ? {...p, ...post, blogName: blog.name} : p)
+    updatePost(post: PostInputModel, id: string) {
+        const blog = blogsRepository.find(post.blogId)
+
+        if (blog) {
+            db.posts = db.posts.map(p => p.id === id ? {...p, ...post, blogName: blog.name} : p)
+            return true;
+        }
+
+        return false;
     },
     map(post: PostDbType) {
         const postForOutput: PostViewModel = {

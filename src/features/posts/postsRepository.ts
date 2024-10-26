@@ -16,6 +16,7 @@ export const postsRepository = {
             shortDescription: post.shortDescription,
             blogId: post.blogId,
             blogName: blog.name,
+            createdAt: new Date().toISOString(),
         } as PostDbType
 
         const res = await postCollection.insertOne(newPost);

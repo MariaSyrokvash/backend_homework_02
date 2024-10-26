@@ -9,7 +9,8 @@ import {PostDbType} from '../../db/post-db-type'
 
 export const postsRepository = {
     async createPost(post: PostInputModel) {
-        const blog = await blogsRepository.getBlogById(post.blogId)
+        const blog = await blogsRepository.getBlogById(post.blogId);
+
         const newPost = {
             title: post.title,
             content: post.content,

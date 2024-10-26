@@ -11,7 +11,6 @@ import {
     MaxLengthPostTitle,
     MinLength
 } from "../../../constants/postValidator.constants";
-import {findBlogValidator} from "../../blogs/middlewares/blogValidators";
 
 // title: string // max 30
 // shortDescription: string // max 100
@@ -33,12 +32,12 @@ export const contentValidator = body('content').isString().withMessage('not stri
 
 export const blogIdValidator = body('blogId').isString().withMessage('not string')
     .trim().custom(blogId => {
-        const blog = blogsRepository.find(blogId)
+        const blog = blogsRepository.getBlogById(blogId)
         return !!blog
     }).withMessage('no blog')
 
 export const findPostValidator = (req: Request<{id: string}>, res: Response, next: NextFunction) => {
-    const post = postsRepository.find(req.params.id)
+    const post = postsRepository.getPostById(req.params.id)
     if (!post) {
         res.sendStatus(HttpStatuses.NotFound404)
         return

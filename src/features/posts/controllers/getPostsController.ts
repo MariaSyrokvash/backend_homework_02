@@ -6,7 +6,7 @@ import {HttpStatuses} from "../../../constants/httpStatusCode.constants";
 
 import {PostViewModel} from '../../../input-output-types/posts-types'
 
-export const getPostsController = (req: Request, res: Response<PostViewModel[]>) => {
-    const posts = postsRepository.getAll();
+export const getPostsController = async(_: Request, res: Response<PostViewModel[]>) => {
+    const posts = await postsRepository.getAllPosts();
     res.status(HttpStatuses.Ok200).json(posts)
 }

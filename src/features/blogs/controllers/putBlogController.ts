@@ -6,10 +6,10 @@ import {BlogInputModel} from '../../../input-output-types/blogs-types'
 
 import {HttpStatuses} from "../../../constants/httpStatusCode.constants";
 
-export const putBlogController = (req: Request<{id: string}, any, BlogInputModel>, res: Response) => {
+export const putBlogController = async (req: Request<{id: string}, any, BlogInputModel>, res: Response) => {
    const blogId = req.params.id;
    const body = req.body;
-   const isUpdated = blogsRepository.updateBlog(body, blogId)
+   const isUpdated = await blogsRepository.updateBlog(body, blogId)
 
     isUpdated
         ? res.sendStatus(HttpStatuses.NoContent204)

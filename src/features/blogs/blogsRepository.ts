@@ -44,7 +44,7 @@ export const blogsRepository = {
         return res.deletedCount === 1;
     },
     async updateBlog(body: BlogInputModel, id: string) {
-        const res = await blogCollection.updateOne({ id }, body)
+        const res = await blogCollection.updateOne({ id }, { $set: body });
         return res.matchedCount === 1;
     },
     map(blog: BlogDbType) {

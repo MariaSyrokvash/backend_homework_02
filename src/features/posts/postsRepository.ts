@@ -49,9 +49,12 @@ export const postsRepository = {
     },
     async updatePost(body: PostInputModel, id: string) {
         const blog = await blogsRepository.getBlogById(body.blogId)
-        const res = await postCollection.updateOne({ id }, { ...body, blogName: blog.name })
+        const res = await postCollection.updateOne(
+          { id },
+          {$set: { ...body, blogName: blog.name }}
+        );
 
-        return res.matchedCount === 1;
+        return res.matchedCount === 1 && res.modifiedCount === 1;
     },
     map(post: PostDbType) {
         const postForOutput: PostViewModel = {

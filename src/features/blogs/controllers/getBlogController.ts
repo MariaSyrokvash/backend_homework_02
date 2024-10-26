@@ -6,7 +6,7 @@ import {BlogViewModel} from '../../../input-output-types/blogs-types'
 
 import {HttpStatuses} from "../../../constants/httpStatusCode.constants";
 
-export const getBlogController = (req: Request<{id: string}>, res: Response<BlogViewModel>) => {
-    const blog = blogsRepository.findAndMap(req.params.id);
+export const getBlogController = async (req: Request<{id: string}>, res: Response<BlogViewModel>) => {
+    const blog = await blogsRepository.findAndMap(req.params.id);
     res.status(HttpStatuses.Ok200).json(blog)
 }

@@ -1,48 +1,51 @@
+import {ObjectId} from "mongodb";
+
+import {blogCollection} from "../../db/mongoDb";
+
 import {BlogDbType} from '../../db/blog-db-type'
-import {db} from '../../db/db'
 import {BlogInputModel, BlogViewModel} from '../../input-output-types/blogs-types'
 
 export const blogsRepository = {
-    create(blog: BlogInputModel) {
-        const newBlog: BlogDbType = {
-            id: new Date().toISOString() + Math.random(),
+    async createBlog(blog: BlogInputModel): Promise<ObjectId> {
+        const newBlog = {
             name: blog.name,
             description: blog.description,
             websiteUrl: blog.websiteUrl,
+            createdAt: new Date().toISOString(),
+            isMembership: false // Default value
+        } as BlogDbType;
+
+        const res = await blogCollection.insertOne(newBlog);
+        const customId = res.insertedId.toString();
+        await blogCollection.updateOne({ _id: res.insertedId }, { $set: { id: customId } });
+        return res.insertedId;
+    },
+    async getBlogByUUID(id: ObjectId){
+        const res = await blogCollection.findOne({_id: id }, { projection: { _id: 0 }})
+        if (res) {
+            return this.map(res)
         }
-        db.blogs = [...db.blogs, newBlog]
-        return newBlog.id
+        return undefined
     },
-    find(id: string) {
-        return db.blogs.find(b => b.id === id)
+
+    async getBlogById(id: string): Promise<BlogDbType> {
+        return await blogCollection.findOne({ id}, { projection: { _id: 0 }}) as BlogDbType
     },
-    findAndMap(id: string) {
-        const blog = this.find(id)! // ! используем этот метод если проверили существование
+    async findAndMap(id: string) {
+        const blog = await this.getBlogById(id) // ! используем этот метод если проверили существование
         return this.map(blog)
     },
-    getAll() {
-        return db.blogs.map(p => this.map(p))
+    async getAll() {
+        const res = await blogCollection.find({}, { projection: { _id: 0 }}).toArray();
+        return res.map(blog => this.map(blog))
     },
-    deleteBlog(id: string) {
-        const blogIndex = db.blogs.findIndex(b => b.id === id);
-        if (blogIndex === -1) {
-            return false;
-        }
-        db.blogs.splice(blogIndex, 1);
-        return true;
+    async deleteBlog(id: string) {
+        const res = await blogCollection.deleteOne({ id })
+        return res.deletedCount === 1;
     },
-    updateBlog(body: BlogInputModel, id: string) {
-        const blogIndex = db.blogs.findIndex(b => b.id === id);
-
-        if (blogIndex === -1) {
-            return false;
-        }
-
-        db.blogs[blogIndex] = {
-            ...db.blogs[blogIndex],
-            ...body,
-        };
-        return true;
+    async updateBlog(body: BlogInputModel, id: string) {
+        const res = await blogCollection.updateOne({ id }, body)
+        return res.matchedCount === 1;
     },
     map(blog: BlogDbType) {
         const blogForOutput: BlogViewModel = {
@@ -50,6 +53,8 @@ export const blogsRepository = {
             description: blog.description,
             websiteUrl: blog.websiteUrl,
             name: blog.name,
+            createdAt: blog.createdAt,
+            isMembership: blog.isMembership,
         }
         return blogForOutput
     },

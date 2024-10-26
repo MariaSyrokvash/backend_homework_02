@@ -6,11 +6,11 @@ import {PostInputModel} from '../../../input-output-types/posts-types'
 
 import {HttpStatuses} from "../../../constants/httpStatusCode.constants";
 
-export const putPostController = (req: Request<{id: string}, any, PostInputModel>, res: Response) => {
+export const putPostController = async(req: Request<{id: string}, any, PostInputModel>, res: Response) => {
     const postId = req.params.id;
     const body = req.body;
 
-    const isUpdated = postsRepository.updatePost(body, postId)
+    const isUpdated = await postsRepository.updatePost(body, postId)
 
     isUpdated
         ? res.sendStatus(HttpStatuses.NoContent204)

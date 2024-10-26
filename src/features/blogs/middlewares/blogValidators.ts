@@ -29,8 +29,8 @@ export const websiteUrlValidator = body('websiteUrl')
     .trim().isURL().withMessage('not url')
     .isLength({min: MinLength, max: MaxLengthBlogWebsiteUrl}).withMessage(`more then ${MaxLengthBlogWebsiteUrl} or 0`)
 
-export const findBlogValidator = (req: Request<{id: string}>, res: Response, next: NextFunction) => {
-    const blog = blogsRepository.find(req.params.id)
+export const findBlogValidator = async (req: Request<{id: string}>, res: Response, next: NextFunction) => {
+    const blog = await blogsRepository.getBlogById(req.params.id)
     if (!blog) {
         res.sendStatus(HttpStatuses.NotFound404)
         return

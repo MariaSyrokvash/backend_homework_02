@@ -2,10 +2,10 @@ import {Request, Response} from 'express'
 import {blogsRepository} from '../blogsRepository'
 import {HttpStatuses} from "../../../constants/httpStatusCode.constants";
 
-export const delBlogController = (req: Request<{id: string}>, res: Response) => {
+export const delBlogController = async(req: Request<{id: string}>, res: Response) => {
     const blogId = req.params.id;
 
-    const isDeleted = blogsRepository.deleteBlog(blogId);
+    const isDeleted = await blogsRepository.deleteBlog(blogId);
 
     isDeleted
         ?  res.sendStatus(HttpStatuses.NoContent204)

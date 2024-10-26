@@ -6,11 +6,9 @@ import {HttpStatuses} from "../../../constants/httpStatusCode.constants";
 
 import {BlogInputModel, BlogViewModel} from '../../../input-output-types/blogs-types'
 
-export const createBlogController = (req: Request<any, any, BlogInputModel>, res: Response<BlogViewModel>) => {
-    const newBlogId = blogsRepository.create(req.body)
-    const newBlog = blogsRepository.findAndMap(newBlogId)
+export const createBlogController = async (req: Request<any, any, BlogInputModel>, res: Response<BlogViewModel>) => {
+    const newBlogId = await blogsRepository.createBlog(req.body)
+    const newBlog = await blogsRepository.getBlogByUUID(newBlogId)
 
-    res
-        .status(HttpStatuses.Created201)
-        .json(newBlog)
+    res.status(HttpStatuses.Created201).json(newBlog)
 }

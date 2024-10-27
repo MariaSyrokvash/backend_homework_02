@@ -31,13 +31,13 @@ export const contentValidator = body('content').isString().withMessage('not stri
     .trim().isLength({min: MinLength, max: MaxLengthPostContent}).withMessage(`more then ${MaxLengthPostContent} or 0`)
 
 export const blogIdValidator = body('blogId').isString().withMessage('not string')
-    .trim().custom(blogId => {
-        const blog = blogsRepository.getBlogById(blogId)
+    .trim().custom(async (blogId) => {
+        const blog = await blogsRepository.getBlogById(blogId)
         return !!blog
     }).withMessage('no blog')
 
-export const findPostValidator = (req: Request<{id: string}>, res: Response, next: NextFunction) => {
-    const post = postsRepository.getPostById(req.params.id)
+export const findPostValidator = async (req: Request<{id: string}>, res: Response, next: NextFunction) => {
+    const post = await postsRepository.getPostById(req.params.id)
     if (!post) {
         res.sendStatus(HttpStatuses.NotFound404)
         return

@@ -27,18 +27,14 @@ export const postsRepository = {
         return res.insertedId;
     },
     async getPostById(id: string) {
-        return await postCollection.findOne({ id}, { projection: { _id: 0 } }) as PostDbType
+        return await postCollection.findOne({ id })
     },
     async findAndMap(id: string) {
         const post = await this.getPostById(id)! // ! используем этот метод если проверили существование
-        return this.map(post)
+        return this.map(post as PostDbType)
     },
     async getPostByUUID(id: ObjectId){
-        const res = await postCollection.findOne({_id: id }, { projection: { _id: 0 }})
-        if (res) {
-            return this.map(res)
-        }
-        return undefined
+        return await postCollection.findOne({_id: id }, { projection: { _id: 0 }}) as PostDbType
     },
     async getAllPosts() {
         const res = await postCollection.find({}, { projection: { _id: 0 }}).toArray();

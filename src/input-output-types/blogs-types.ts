@@ -29,3 +29,21 @@ export type PostViewModel = {
     blogName: string
     createdAt: string
 }
+
+
+export type BlogsDto = {
+    pagesCount: number
+    page: number
+    pageSize: number
+    totalCount: number
+    items: BlogViewModel[]
+}
+
+
+export type BlogsFilters = {
+    searchNameTerm: string | null
+    sortBy: string
+    sortDirection: 'asc' | 'desc'
+    pageNumber: number
+    pageSize: number
+}

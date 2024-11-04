@@ -1,7 +1,7 @@
 import {body} from 'express-validator'
 import {inputCheckErrorsMiddleware} from '../../../global-middlewares/inputCheckErrorsMiddleware'
 import {NextFunction, Request, Response} from 'express'
-import {blogsRepository} from '../blogsRepository'
+import {blogsService} from '../service/blogsService'
 import {adminMiddleware} from '../../../global-middlewares/admin-middleware'
 import {HttpStatuses} from "../../../constants/httpStatusCode.constants";
 import {
@@ -9,7 +9,7 @@ import {
     MaxLengthBlogName, MaxLengthBlogPostContent, MaxLengthBlogPostShortDescription, MaxLengthBlogPostTitle,
     MaxLengthBlogWebsiteUrl,
     MinLength
-} from "../../../constants/blogValidator.constants";
+} from "../../../constants/blogs.constants";
 
 // name: string // max 15
 // description: string // max 500
@@ -31,7 +31,7 @@ export const websiteUrlValidator = body('websiteUrl')
     .isLength({min: MinLength, max: MaxLengthBlogWebsiteUrl}).withMessage(`more then ${MaxLengthBlogWebsiteUrl} or 0`)
 
 export const findBlogValidator = async (req: Request<{id: string}>, res: Response, next: NextFunction) => {
-    const blog = await blogsRepository.getBlogById(req.params.id)
+    const blog = await blogsService.getBlogById(req.params.id)
     if (!blog) {
         res.sendStatus(HttpStatuses.NotFound404)
         return

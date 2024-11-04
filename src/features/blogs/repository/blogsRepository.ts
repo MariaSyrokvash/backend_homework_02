@@ -1,39 +1,26 @@
 import {ObjectId} from "mongodb";
 
-import {blogCollection, postCollection} from "../../db/mongoDb";
-import {postsRepository} from "../posts/postsRepository";
+import {blogCollection, postCollection} from "../../../db/mongoDb";
+import {postsRepository} from "../../posts/repository/postsRepository";
 
-import {BlogDbType} from '../../db/blog-db-type'
-import {PostDbType} from "../../db/post-db-type";
-import {BlogInputModel, BlogPostInputModel, BlogViewModel} from '../../input-output-types/blogs-types'
+import {BlogDbType} from '../../../db/blog-db-type'
+import {PostDbType} from "../../../db/post-db-type";
+import {
+    BlogInputModel,
+    BlogPostInputModel,
+    BlogsFilters,
+    BlogViewModel,
+} from '../../../input-output-types/blogs-types';
+import { Direction } from '../../../constants/pagination.constants';
 
 export const blogsRepository = {
-    async createBlog(blog: BlogInputModel): Promise<ObjectId> {
-        const newBlog = {
-            name: blog.name,
-            description: blog.description,
-            websiteUrl: blog.websiteUrl,
-            createdAt: new Date().toISOString(),
-            isMembership: false // Default value
-        } as BlogDbType;
-
+    async createBlog(newBlog: BlogDbType): Promise<ObjectId> {
         const res = await blogCollection.insertOne(newBlog);
         const customId = res.insertedId.toString();
         await blogCollection.updateOne({ _id: res.insertedId }, { $set: { id: customId } });
         return res.insertedId;
     },
-    async createPost(post: BlogPostInputModel, blogId: string): Promise<ObjectId> {
-        const blog = await this.getBlogById(blogId);
-
-        const newPost = {
-            title: post.title,
-            shortDescription: post.shortDescription,
-            content: post.content,
-            createdAt: new Date().toISOString(),
-            blogId: blogId,
-            blogName: blog.name,
-        } as PostDbType;
-
+    async createPost(newPost: PostDbType): Promise<ObjectId> {
         const res = await postCollection.insertOne(newPost);
         const customId = res.insertedId.toString();
         await postCollection.updateOne({ _id: res.insertedId }, { $set: { id: customId } });
@@ -54,8 +41,22 @@ export const blogsRepository = {
         const blog = await this.getBlogById(id) // ! используем этот метод если проверили существование
         return this.map(blog)
     },
-    async getAll() {
-        const res = await blogCollection.find({}, { projection: { _id: 0 }}).toArray();
+    async getAll(filters: BlogsFilters) {
+        const { searchNameTerm, pageNumber, pageSize, sortBy, sortDirection} = filters
+        const currentFilters: any = {};
+
+        if (searchNameTerm) {
+            currentFilters.name = { $regex: searchNameTerm, $options: "i" };
+        }
+
+        const skip = (pageNumber - 1) * pageSize;
+
+        const res = await blogCollection
+          .find(currentFilters, { projection: { _id: 0 }})
+          .skip(skip)
+          .limit(pageSize)
+          .sort({ [sortBy]: sortDirection === Direction.Asc ? 1 : -1 })
+          .toArray();
         return res.map(blog => this.map(blog))
     },
     async getAllPostByBlogId(blogId: string) {
@@ -69,6 +70,15 @@ export const blogsRepository = {
     async updateBlog(body: BlogInputModel, id: string) {
         const res = await blogCollection.updateOne({ id }, { $set: body });
         return res.matchedCount === 1;
+    },
+    async getTotalBlogsCount(searchNameTerm: string | null) {
+        const currentFilters: any = {};
+
+        if (searchNameTerm) {
+            currentFilters.name = { $regex: searchNameTerm, $options: "i" };
+        }
+
+        return blogCollection.countDocuments(currentFilters)
     },
     map(blog: BlogDbType) {
         const blogForOutput: BlogViewModel = {

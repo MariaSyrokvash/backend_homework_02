@@ -1,11 +1,12 @@
 import {Request, Response} from 'express'
-import {postsRepository} from '../postsRepository'
 import {HttpStatuses} from "../../../constants/httpStatusCode.constants";
+
+import { postsService } from '../service/postsRepository';
 
 export const delPostController = async (req: Request<{id: string}>, res: Response) => {
     const postId = req.params.id;
 
-    const isDeleted = await postsRepository.deletePost(postId);
+    const isDeleted = await postsService.deletePost(postId);
 
     isDeleted
         ?  res.sendStatus(HttpStatuses.NoContent204)

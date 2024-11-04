@@ -1,9 +1,13 @@
-import {Request, Response} from 'express'
-import {BlogViewModel} from '../../../input-output-types/blogs-types'
-import {blogsRepository} from '../blogsRepository'
-import {HttpStatuses} from "../../../constants/httpStatusCode.constants";
+import { Request, Response } from 'express';
+import { BlogsDto } from '../../../input-output-types/blogs-types';
+import { HttpStatuses } from '../../../constants/httpStatusCode.constants';
 
-export const getBlogsController = async (_: Request, res: Response<BlogViewModel[]>) => {
-    const blogs = await blogsRepository.getAll();
+import { blogsService } from '../service/blogsService';
+import { getBlogsQueries } from '../helpers';
+
+export const getBlogsController = async (req: Request, res: Response<BlogsDto>) => {
+    const blogsFilters = getBlogsQueries(req);
+    const blogs = await blogsService.getAll(blogsFilters);
     res.status(HttpStatuses.Ok200).json(blogs)
 }
+

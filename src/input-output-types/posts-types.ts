@@ -14,3 +14,18 @@ export type PostViewModel = {
     blogName: string
     createdAt: string
 }
+
+export type PostsDto = {
+    pagesCount: number
+    page: number
+    pageSize: number
+    totalCount: number
+    items: PostViewModel[]
+}
+
+export type PostsFilters = {
+    sortBy: string
+    sortDirection: 'asc' | 'desc'
+    pageNumber: number
+    pageSize: number
+}

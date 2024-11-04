@@ -1,8 +1,7 @@
 import {body} from 'express-validator'
 import {inputCheckErrorsMiddleware} from '../../../global-middlewares/inputCheckErrorsMiddleware'
-import {blogsRepository} from '../../blogs/blogsRepository'
 import {NextFunction, Request, Response} from 'express'
-import {postsRepository} from '../postsRepository'
+import {postsRepository} from '../repository/postsRepository'
 import {adminMiddleware} from '../../../global-middlewares/admin-middleware'
 import {HttpStatuses} from "../../../constants/httpStatusCode.constants";
 import {
@@ -10,7 +9,8 @@ import {
     MaxLengthPostShortDescription,
     MaxLengthPostTitle,
     MinLength
-} from "../../../constants/postValidator.constants";
+} from "../../../constants/posts.constants";
+import { blogsService } from '../../blogs/service/blogsService';
 
 // title: string // max 30
 // shortDescription: string // max 100
@@ -34,7 +34,7 @@ export const blogIdValidator = body('blogId')
   .isString().withMessage('not string')
   .trim()
   .custom(async (blogId, { req }) => {
-      const blog = await blogsRepository.getBlogById(blogId);
+      const blog = await blogsService.getBlogById(blogId);
       if (!blog) {
           // Reject the value if no blog was found with the given blogId
           throw new Error('no blog');

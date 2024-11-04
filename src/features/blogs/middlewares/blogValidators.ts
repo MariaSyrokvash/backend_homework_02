@@ -6,7 +6,7 @@ import {adminMiddleware} from '../../../global-middlewares/admin-middleware'
 import {HttpStatuses} from "../../../constants/httpStatusCode.constants";
 import {
     MaxLengthBlogDescription,
-    MaxLengthBlogName,
+    MaxLengthBlogName, MaxLengthBlogPostContent, MaxLengthBlogPostShortDescription, MaxLengthBlogPostTitle,
     MaxLengthBlogWebsiteUrl,
     MinLength
 } from "../../../constants/blogValidator.constants";
@@ -15,6 +15,7 @@ import {
 // description: string // max 500
 // websiteUrl: string // max 100 ^https://([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+(\/[a-zA-Z0-9_-]+)*\/?$
 
+// Blog
 export const nameValidator = body('name')
     .isString().withMessage('not string')
     .trim().isLength({min: MinLength, max: MaxLengthBlogName}).withMessage(`more then ${MaxLengthBlogName} or 0`)
@@ -37,6 +38,21 @@ export const findBlogValidator = async (req: Request<{id: string}>, res: Respons
     }
     next()
 }
+
+
+// Post for specific blog
+export const titleValidator = body('title')
+  .isString().withMessage('not string')
+  .trim().isLength({min: MinLength, max: MaxLengthBlogPostTitle}).withMessage(`more then ${MaxLengthBlogPostTitle} or 0`)
+
+export const shortDescriptionValidator = body('shortDescription')
+  .isString().withMessage('not string')
+  .trim().isLength({min: MinLength, max: MaxLengthBlogPostShortDescription}).withMessage(`more then ${MaxLengthBlogPostShortDescription} or 0`)
+
+export const contentValidator = body('shortDescription')
+  .isString().withMessage('not string')
+  .trim().isLength({min: MinLength, max: MaxLengthBlogPostContent}).withMessage(`more then ${MaxLengthBlogPostContent} or 0`)
+
 
 const commonBlogValidators = [
     nameValidator,
@@ -66,4 +82,14 @@ export const updateBlogValidators = [
 export const deleteBlogValidators = [
     adminMiddleware,
     findBlogValidator,
+]
+
+export const createPostInBlogValidators = [
+    adminMiddleware,
+    findBlogValidator,
+    titleValidator,
+    shortDescriptionValidator,
+    contentValidator,
+
+    inputCheckErrorsMiddleware,
 ]

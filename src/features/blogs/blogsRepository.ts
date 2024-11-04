@@ -1,9 +1,11 @@
 import {ObjectId} from "mongodb";
 
-import {blogCollection} from "../../db/mongoDb";
+import {blogCollection, postCollection} from "../../db/mongoDb";
+import {postsRepository} from "../posts/postsRepository";
 
 import {BlogDbType} from '../../db/blog-db-type'
-import {BlogInputModel, BlogViewModel} from '../../input-output-types/blogs-types'
+import {PostDbType} from "../../db/post-db-type";
+import {BlogInputModel, BlogPostInputModel, BlogViewModel} from '../../input-output-types/blogs-types'
 
 export const blogsRepository = {
     async createBlog(blog: BlogInputModel): Promise<ObjectId> {
@@ -20,6 +22,23 @@ export const blogsRepository = {
         await blogCollection.updateOne({ _id: res.insertedId }, { $set: { id: customId } });
         return res.insertedId;
     },
+    async createPost(post: BlogPostInputModel, blogId: string): Promise<ObjectId> {
+        const blog = await this.getBlogById(blogId);
+
+        const newPost = {
+            title: post.title,
+            shortDescription: post.shortDescription,
+            content: post.content,
+            createdAt: new Date().toISOString(),
+            blogId: blogId,
+            blogName: blog.name,
+        } as PostDbType;
+
+        const res = await postCollection.insertOne(newPost);
+        const customId = res.insertedId.toString();
+        await postCollection.updateOne({ _id: res.insertedId }, { $set: { id: customId } });
+        return res.insertedId;
+    },
     async getBlogByUUID(id: ObjectId){
         const res = await blogCollection.findOne({_id: id }, { projection: { _id: 0 }})
         if (res) {
@@ -29,7 +48,7 @@ export const blogsRepository = {
     },
 
     async getBlogById(id: string): Promise<BlogDbType> {
-        return await blogCollection.findOne({ id}, { projection: { _id: 0 }}) as BlogDbType
+        return await blogCollection.findOne({ id }, { projection: { _id: 0 }}) as BlogDbType
     },
     async findAndMap(id: string) {
         const blog = await this.getBlogById(id) // ! используем этот метод если проверили существование
@@ -38,6 +57,10 @@ export const blogsRepository = {
     async getAll() {
         const res = await blogCollection.find({}, { projection: { _id: 0 }}).toArray();
         return res.map(blog => this.map(blog))
+    },
+    async getAllPostByBlogId(blogId: string) {
+        const res = await postCollection.find({ blogId }, { projection: { _id: 0 }}).toArray();
+        return res.map(blog => postsRepository.map(blog))
     },
     async deleteBlog(id: string) {
         const res = await blogCollection.deleteOne({ id })

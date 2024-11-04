@@ -4,7 +4,13 @@ import { blogsRepository } from '../repository/blogsRepository';
 
 import {BlogDbType} from '../../../db/blog-db-type'
 import {PostDbType} from "../../../db/post-db-type";
-import { BlogInputModel, BlogPostInputModel, BlogsDto, BlogsFilters } from '../../../input-output-types/blogs-types';
+import {
+    BlogInputModel,
+    BlogPostInputModel,
+    BlogsDto,
+    BlogsFilters,
+    PostsBlogFilters,
+} from '../../../input-output-types/blogs-types';
 
 
 export const blogsService = {
@@ -53,8 +59,18 @@ export const blogsService = {
            items: blogs
        }
     },
-    async getAllPostByBlogId(blogId: string) {
-        return await blogsRepository.getAllPostByBlogId(blogId)
+    async getAllPostByBlogId(blogId: string, filters: PostsBlogFilters) {
+        const { pageSize, pageNumber} = filters
+        const posts = await blogsRepository.getAllPostByBlogId(blogId,  filters)
+        const totalCount = await blogsRepository.getTotalPostsCountByBlogId(blogId)
+
+        return {
+            pagesCount: Math.ceil(totalCount / pageSize),
+            page: pageNumber,
+            pageSize,
+            totalCount: totalCount,
+            items: posts
+        }
     },
     async deleteBlog(id: string) {
         return await blogsRepository.deleteBlog(id)

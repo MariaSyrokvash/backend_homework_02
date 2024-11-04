@@ -9,7 +9,7 @@ import {
     BlogInputModel,
     BlogPostInputModel,
     BlogsFilters,
-    BlogViewModel,
+    BlogViewModel, PostsBlogFilters,
 } from '../../../input-output-types/blogs-types';
 import { Direction } from '../../../constants/pagination.constants';
 
@@ -59,9 +59,19 @@ export const blogsRepository = {
           .toArray();
         return res.map(blog => this.map(blog))
     },
-    async getAllPostByBlogId(blogId: string) {
-        const res = await postCollection.find({ blogId }, { projection: { _id: 0 }}).toArray();
-        return res.map(blog => postsRepository.map(blog))
+    async getAllPostByBlogId(blogId: string,  filters: PostsBlogFilters) {
+        const { pageSize, pageNumber, sortBy, sortDirection} = filters
+        const currentFilters: any = {};
+
+        const skip = (pageNumber - 1) * pageSize;
+
+        const posts = await postCollection
+          .find({ blogId, ...currentFilters }, { projection: { _id: 0 }})
+          .skip(skip)
+          .limit(pageSize)
+          .sort({ [sortBy]: sortDirection === Direction.Asc ? 1 : -1 })
+          .toArray();
+        return posts.map(blog => postsRepository.map(blog))
     },
     async deleteBlog(id: string) {
         const res = await blogCollection.deleteOne({ id })
@@ -79,6 +89,9 @@ export const blogsRepository = {
         }
 
         return blogCollection.countDocuments(currentFilters)
+    },
+    async getTotalPostsCountByBlogId(blogId: string) {
+        return postCollection.countDocuments({ blogId });
     },
     map(blog: BlogDbType) {
         const blogForOutput: BlogViewModel = {

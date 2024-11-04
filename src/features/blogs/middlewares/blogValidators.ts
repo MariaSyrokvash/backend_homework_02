@@ -49,7 +49,7 @@ export const shortDescriptionValidator = body('shortDescription')
   .isString().withMessage('not string')
   .trim().isLength({min: MinLength, max: MaxLengthBlogPostShortDescription}).withMessage(`more then ${MaxLengthBlogPostShortDescription} or 0`)
 
-export const contentValidator = body('shortDescription')
+export const contentValidator = body('content')
   .isString().withMessage('not string')
   .trim().isLength({min: MinLength, max: MaxLengthBlogPostContent}).withMessage(`more then ${MaxLengthBlogPostContent} or 0`)
 

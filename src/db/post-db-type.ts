@@ -1,12 +1,12 @@
-import {ObjectId} from "mongodb";
+import { ObjectId } from "mongodb";
 
 export type PostDbType = {
-    _id: ObjectId
-    id: string
-    title: string // max 30
-    shortDescription: string // max 100
-    content: string // max 1000
-    blogId: string // valid
-    blogName: string
-    createdAt: string
-}
+  _id: ObjectId;
+  id: string;
+  title: string; // max 30
+  shortDescription: string; // max 100
+  content: string; // max 1000
+  blogId: string; // valid
+  blogName: string;
+  createdAt: string;
+};

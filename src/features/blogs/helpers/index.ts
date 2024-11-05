@@ -1,31 +1,47 @@
-import {Request} from 'express'
-import { SortDirection } from 'mongodb';
+import { Request } from "express";
+import { SortDirection } from "mongodb";
 
-import { DefaultPageNumber, DefaultPageSize, DefaultSortBy, Direction } from '../../../constants/pagination.constants';
+import {
+  DefaultPageNumber,
+  DefaultPageSize,
+  DefaultSortBy,
+  Direction,
+} from "../../../constants/pagination.constants";
 
-import { BlogsFilters, PostsBlogFilters } from '../../../input-output-types/blogs-types';
+import {
+  BlogsFilters,
+  PostsBlogFilters,
+} from "../../../input-output-types/blogs-types";
 
 export const getBlogsQueries = (req: Request): BlogsFilters => {
   const pageNumber = Number(req.query.pageNumber) || DefaultPageNumber;
   const pageSize = Number(req.query.pageSize) || DefaultPageSize;
   const sortBy = req.query.sortBy ? String(req.query.sortBy) : DefaultSortBy;
-  const sortDirection: SortDirection = req.query.sortDirection?.toString() === Direction.Asc ? Direction.Asc : Direction.Desc;
-  const searchNameTerm = req.query.searchNameTerm ? String(req.query.searchNameTerm) : null;
+  const sortDirection: SortDirection =
+    req.query.sortDirection?.toString() === Direction.Asc
+      ? Direction.Asc
+      : Direction.Desc;
+  const searchNameTerm = req.query.searchNameTerm
+    ? String(req.query.searchNameTerm)
+    : null;
 
   return {
     pageNumber,
     pageSize,
     sortBy,
     sortDirection,
-    searchNameTerm
+    searchNameTerm,
   };
-}
+};
 
 export const getPostsBlogQueries = (req: Request): PostsBlogFilters => {
   const pageNumber = Number(req.query.pageNumber) || DefaultPageNumber;
   const pageSize = Number(req.query.pageSize) || DefaultPageSize;
   const sortBy = req.query.sortBy ? String(req.query.sortBy) : DefaultSortBy;
-  const sortDirection = req.query.sortDirection?.toString() === Direction.Asc ? Direction.Asc : Direction.Desc;
+  const sortDirection =
+    req.query.sortDirection?.toString() === Direction.Asc
+      ? Direction.Asc
+      : Direction.Desc;
 
   return {
     pageNumber,
@@ -33,4 +49,4 @@ export const getPostsBlogQueries = (req: Request): PostsBlogFilters => {
     sortBy,
     sortDirection,
   };
-}
+};

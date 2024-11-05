@@ -1,8 +1,9 @@
 import {Request, Response} from 'express'
 import {HttpStatuses} from "../../../constants/httpStatusCode.constants";
-import {setDB} from "../../../db/db";
+import { blogCollection, postCollection } from '../../../db/mongoDb';
 
-export const deleteDBController = (req: Request, res: Response) => {
-    setDB();
+export const deleteDBController = async (req: Request, res: Response) => {
+    await postCollection.drop();
+    await blogCollection.drop();
     res.sendStatus(HttpStatuses.NoContent204);
 }

@@ -7,9 +7,9 @@ import {BlogDbType} from '../../../db/blog-db-type'
 import {PostDbType} from "../../../db/post-db-type";
 import {
     BlogInputModel,
-    BlogPostInputModel,
     BlogsFilters,
-    BlogViewModel, PostsBlogFilters,
+    BlogViewModel,
+    PostsBlogFilters,
 } from '../../../input-output-types/blogs-types';
 import { Direction } from '../../../constants/pagination.constants';
 

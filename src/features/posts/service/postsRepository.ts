@@ -6,7 +6,6 @@ import { PostDbType } from '../../../db/post-db-type';
 
 import { blogsService } from '../../blogs/service/blogsService';
 import { postsRepository } from '../repository/postsRepository';
-import { blogsRepository } from '../../blogs/repository/blogsRepository';
 
 export const postsService = {
     async createPost(post: PostInputModel) {

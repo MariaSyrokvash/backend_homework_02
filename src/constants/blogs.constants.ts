@@ -11,9 +11,3 @@ export const MaxLengthBlogPostTitle = 30;
 export const MaxLengthBlogPostShortDescription = 100;
 
 export const MaxLengthBlogPostContent = 1000;
-
-export const DefaultPageNumber = 1
-
-export const DefaultPageSize = 10
-
-export const DefaultSortBy = 'createdAt'

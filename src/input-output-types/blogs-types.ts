@@ -1,3 +1,5 @@
+import { SortDirection } from 'mongodb';
+
 export type BlogInputModel = {
     name: string // max 15
     description: string // max 500
@@ -43,14 +45,14 @@ export type BlogsDto = {
 export type BlogsFilters = {
     searchNameTerm: string | null
     sortBy: string
-    sortDirection: 'asc' | 'desc'
+    sortDirection: SortDirection
     pageNumber: number
     pageSize: number
 }
 
 export type PostsBlogFilters = {
     sortBy: string
-    sortDirection: 'asc' | 'desc'
+    sortDirection: SortDirection
     pageNumber: number
     pageSize: number
 }

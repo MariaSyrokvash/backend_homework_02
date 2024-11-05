@@ -1,6 +1,6 @@
 export const DefaultPageNumber = 1
 
-export const DefaultPageSize = 1
+export const DefaultPageSize = 10
 
 export const DefaultSortBy = 'createdAt'
 

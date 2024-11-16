@@ -1,37 +1,25 @@
-import { ObjectId } from "mongodb";
-
-import { postCollection } from "../../../db/mongoDb";
-
-import {
-  PostInputModel,
-  PostsFilters,
-  PostViewModel,
-} from "../../../input-output-types/posts-types";
-import { PostDbType } from "../../../db/post-db-type";
-import { Direction } from "../../../constants/pagination.constants";
+import { type ObjectId } from 'mongodb';
+import { type PostDbType } from '../../../db/post-db-type';
+import { postsCollection } from '../../../db/mongoDb';
+import { type PostInputModel, type PostsFilters, type PostViewModel } from '../../../input-output-types/posts-types';
+import { Direction } from '../../../constants/pagination.constants';
 
 export const postsRepository = {
   async createPost(newPost: PostDbType) {
-    const res = await postCollection.insertOne(newPost);
+    const res = await postsCollection.insertOne(newPost);
     const customId = res.insertedId.toString();
-    await postCollection.updateOne(
-      { _id: res.insertedId },
-      { $set: { id: customId } },
-    );
+    await postsCollection.updateOne({ _id: res.insertedId }, { $set: { id: customId } });
     return res.insertedId;
   },
   async getPostById(id: string) {
-    return await postCollection.findOne({ id });
+    return await postsCollection.findOne({ id });
   },
   async findAndMap(id: string) {
-    const post = await this.getPostById(id)!; // ! используем этот метод если проверили существование
+    const post = await this.getPostById(id); // ! используем этот метод если проверили существование
     return this.map(post as PostDbType);
   },
   async getPostByUUID(id: ObjectId) {
-    return (await postCollection.findOne(
-      { _id: id },
-      { projection: { _id: 0 } },
-    )) as PostDbType;
+    return (await postsCollection.findOne({ _id: id }, { projection: { _id: 0 } })) as PostDbType;
   },
   async getAllPosts(filters: PostsFilters) {
     const { pageSize, sortBy, sortDirection, pageNumber } = filters;
@@ -39,7 +27,7 @@ export const postsRepository = {
 
     const skip = (pageNumber - 1) * pageSize;
 
-    const res = await postCollection
+    const res = await postsCollection
       .find(currentFilters, { projection: { _id: 0 } })
       .skip(skip)
       .limit(pageSize)
@@ -48,16 +36,16 @@ export const postsRepository = {
     return res.map((blog) => this.map(blog));
   },
   async deletePost(id: string) {
-    const res = await postCollection.deleteOne({ id });
+    const res = await postsCollection.deleteOne({ id });
     return res.deletedCount === 1;
   },
   async updatePost(body: PostInputModel, id: string) {
-    const res = await postCollection.updateOne({ id }, { $set: { ...body } });
+    const res = await postsCollection.updateOne({ id }, { $set: { ...body } });
 
     return res.matchedCount === 1 && res.modifiedCount === 1;
   },
   async getTotalPostsCount() {
-    return postCollection.countDocuments();
+    return await postsCollection.countDocuments();
   },
   map(post: PostDbType) {
     const postForOutput: PostViewModel = {

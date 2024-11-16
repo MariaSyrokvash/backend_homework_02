@@ -1,27 +1,27 @@
-import { SortDirection } from "mongodb";
+import { type SortDirection } from 'mongodb';
 
-export type BlogInputModel = {
+export interface BlogInputModel {
   name: string; // max 15
   description: string; // max 500
   websiteUrl: string; // max 100 ^https://([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+(\/[a-zA-Z0-9_-]+)*\/?$
-};
+}
 
-export type BlogViewModel = {
+export interface BlogViewModel {
   id: string;
   name: string; // max 15
   description: string; // max 500
   websiteUrl: string; // max 100 ^https://([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+(\/[a-zA-Z0-9_-]+)*\/?$
   createdAt: string;
   isMembership: boolean;
-};
+}
 
-export type BlogPostInputModel = {
+export interface BlogPostInputModel {
   title: string; // max 30
   shortDescription: string; // max 100
   content: string; // max 1000
-};
+}
 
-export type PostViewModel = {
+export interface PostViewModel {
   id: string;
   title: string; // max 30
   shortDescription: string; // max 100
@@ -29,27 +29,27 @@ export type PostViewModel = {
   blogId: string;
   blogName: string;
   createdAt: string;
-};
+}
 
-export type BlogsDto = {
+export interface BlogsDto {
   pagesCount: number;
   page: number;
   pageSize: number;
   totalCount: number;
   items: BlogViewModel[];
-};
+}
 
-export type BlogsFilters = {
+export interface BlogsFilters {
   searchNameTerm: string | null;
   sortBy: string;
   sortDirection: SortDirection;
   pageNumber: number;
   pageSize: number;
-};
+}
 
-export type PostsBlogFilters = {
+export interface PostsBlogFilters {
   sortBy: string;
   sortDirection: SortDirection;
   pageNumber: number;
   pageSize: number;
-};
+}

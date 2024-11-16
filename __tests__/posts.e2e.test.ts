@@ -1,6 +1,6 @@
-import { req } from "./helpers/test-helpers";
-import { connectToDB, postCollection } from "../src/db/mongoDb";
-import { CONFIG } from "../src/config";
+import { req } from './helpers/test-helpers';
+import { connectToDB, postCollection } from '../src/db/mongoDb';
+import { CONFIG } from '../src/config';
 
 describe(CONFIG.PATH.POSTS, () => {
   beforeAll(async () => {
@@ -9,7 +9,7 @@ describe(CONFIG.PATH.POSTS, () => {
     await postCollection.deleteMany();
   });
 
-  it("should get empty array", async () => {
+  it('should get empty array', async () => {
     const res = await req.get(CONFIG.PATH.POSTS).expect(200); // проверяем наличие эндпоинта
 
     expect(res.body.length).toEqual(0); // проверяем ответ эндпоинта

@@ -1,9 +1,10 @@
-import { Request, Response } from "express";
-import { HttpStatuses } from "../../../constants/httpStatusCode.constants";
-import { blogCollection, postCollection } from "../../../db/mongoDb";
+import { type Request, type Response } from 'express';
+import { blogsCollection, postsCollection, usersCollection } from '../../../db/mongoDb';
+import { HttpStatuses } from '../../../constants/httpStatusCode.constants';
 
 export const deleteDBController = async (_: Request, res: Response) => {
-  await postCollection.drop();
-  await blogCollection.drop();
+  await postsCollection.drop();
+  await blogsCollection.drop();
+  await usersCollection.drop();
   res.sendStatus(HttpStatuses.NoContent204);
 };

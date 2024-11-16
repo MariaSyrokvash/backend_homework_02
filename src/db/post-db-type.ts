@@ -1,6 +1,6 @@
-import { ObjectId } from "mongodb";
+import { type ObjectId } from 'mongodb';
 
-export type PostDbType = {
+export interface PostDbType {
   _id: ObjectId;
   id: string;
   title: string; // max 30
@@ -9,4 +9,4 @@ export type PostDbType = {
   blogId: string; // valid
   blogName: string;
   createdAt: string;
-};
+}

@@ -1,6 +1,6 @@
-import { app } from "./app";
-import { CONFIG } from "./config";
-import { connectToDB } from "./db/mongoDb";
+import { connectToDB } from './db/mongoDb';
+import { app } from './app';
+import { CONFIG } from './config';
 
 const startApp = async () => {
   const res = await connectToDB();
@@ -10,8 +10,10 @@ const startApp = async () => {
   }
 
   app.listen(CONFIG.PORT, () => {
-    console.log("...server started in port " + CONFIG.PORT);
+    console.log('...server started in port ' + CONFIG.PORT);
   });
 };
 
-startApp();
+startApp().catch((err) => {
+  console.log(err);
+});

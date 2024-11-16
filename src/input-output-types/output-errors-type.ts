@@ -1,9 +1,9 @@
-import { BlogInputModel } from "./blogs-types";
-import { PostInputModel } from "./posts-types";
+import { type BlogInputModel } from './blogs-types';
+import { type PostInputModel } from './posts-types';
+import { type UserInputModel } from './users-types';
 
-export type FieldNamesType = keyof BlogInputModel | keyof PostInputModel;
-// const f: FieldsType = 'some' // error
+export type FieldNamesType = keyof BlogInputModel | keyof PostInputModel | UserInputModel;
 
-export type OutputErrorsType = {
-  errorsMessages: { message: string; field: FieldNamesType }[];
-};
+export interface OutputErrorsType {
+  errorsMessages: Array<{ message: string; field: FieldNamesType }>;
+}

@@ -1,16 +1,14 @@
-import { ObjectId } from "mongodb";
-
-import { blogsRepository } from "../repository/blogsRepository";
-
-import { BlogDbType } from "../../../db/blog-db-type";
-import { PostDbType } from "../../../db/post-db-type";
+import { type ObjectId } from 'mongodb';
 import {
-  BlogInputModel,
-  BlogPostInputModel,
-  BlogsDto,
-  BlogsFilters,
-  PostsBlogFilters,
-} from "../../../input-output-types/blogs-types";
+  type BlogInputModel,
+  type BlogPostInputModel,
+  type BlogsDto,
+  type BlogsFilters,
+  type PostsBlogFilters,
+} from '../../../input-output-types/blogs-types';
+import { type BlogDbType } from '../../../db/blog-db-type';
+import { blogsRepository } from '../repository/blogsRepository';
+import { type PostDbType } from '../../../db/post-db-type';
 
 export const blogsService = {
   async createBlog(blog: BlogInputModel): Promise<ObjectId> {
@@ -19,22 +17,19 @@ export const blogsService = {
       description: blog.description,
       websiteUrl: blog.websiteUrl,
       createdAt: new Date().toISOString(),
-      isMembership: false, // Default value
+      isMembership: false,
     } as BlogDbType;
 
     return await blogsRepository.createBlog(newBlog);
   },
-  async createPost(
-    post: BlogPostInputModel,
-    blogId: string,
-  ): Promise<ObjectId> {
+  async createPost(post: BlogPostInputModel, blogId: string): Promise<ObjectId> {
     const blog = await this.getBlogById(blogId);
     const newPost = {
       title: post.title,
       shortDescription: post.shortDescription,
       content: post.content,
       createdAt: new Date().toISOString(),
-      blogId: blogId,
+      blogId,
       blogName: blog.name,
     } as PostDbType;
     return await blogsRepository.createPost(newPost);
@@ -51,15 +46,13 @@ export const blogsService = {
   async getAll(filters: BlogsFilters): Promise<BlogsDto> {
     const { pageSize, pageNumber } = filters;
     const blogs = await blogsRepository.getAll(filters);
-    const totalCount = await blogsRepository.getTotalBlogsCount(
-      filters.searchNameTerm,
-    );
+    const totalCount = await blogsRepository.getTotalBlogsCount(filters.searchNameTerm);
 
     return {
       pagesCount: Math.ceil(totalCount / pageSize),
       page: pageNumber,
       pageSize,
-      totalCount: totalCount,
+      totalCount,
       items: blogs,
     };
   },
@@ -72,7 +65,7 @@ export const blogsService = {
       pagesCount: Math.ceil(totalCount / pageSize),
       page: pageNumber,
       pageSize,
-      totalCount: totalCount,
+      totalCount,
       items: posts,
     };
   },

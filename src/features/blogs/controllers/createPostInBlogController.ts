@@ -1,20 +1,10 @@
-import { Request, Response } from "express";
+import { type Request, type Response } from 'express';
+import { blogsService } from '../service/blogsService';
+import { type BlogPostInputModel, type PostViewModel } from '../../../input-output-types/blogs-types';
+import { postsRepository } from '../../posts/repository/postsRepository';
+import { HttpStatuses } from '../../../constants/httpStatusCode.constants';
 
-import { postsRepository } from "../../posts/repository/postsRepository";
-
-import {
-  BlogPostInputModel,
-  PostViewModel,
-} from "../../../input-output-types/blogs-types";
-
-import { HttpStatuses } from "../../../constants/httpStatusCode.constants";
-
-import { blogsService } from "../service/blogsService";
-
-export const createPostInBlogController = async (
-  req: Request<{ id: string }, any, BlogPostInputModel>,
-  res: Response<PostViewModel>,
-) => {
+export const createPostInBlogController = async (req: Request<{ id: string }, any, BlogPostInputModel>, res: Response<PostViewModel>) => {
   const blogId = req.params.id;
   const body = req.body;
 

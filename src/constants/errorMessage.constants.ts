@@ -1,3 +1,3 @@
 export enum ErrorMessages {
-  UnknownError = "Something went wrong",
+  UnknownError = 'Something went wrong',
 }

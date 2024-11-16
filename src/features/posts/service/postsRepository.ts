@@ -1,14 +1,8 @@
-import { ObjectId } from "mongodb";
-
-import {
-  PostInputModel,
-  PostsDto,
-  PostsFilters,
-} from "../../../input-output-types/posts-types";
-import { PostDbType } from "../../../db/post-db-type";
-
-import { blogsService } from "../../blogs/service/blogsService";
-import { postsRepository } from "../repository/postsRepository";
+import { type ObjectId } from 'mongodb';
+import { type PostInputModel, type PostsDto, type PostsFilters } from '../../../input-output-types/posts-types';
+import { blogsService } from '../../blogs/service/blogsService';
+import { type PostDbType } from '../../../db/post-db-type';
+import { postsRepository } from '../repository/postsRepository';
 
 export const postsService = {
   async createPost(post: PostInputModel) {
@@ -43,7 +37,7 @@ export const postsService = {
       pagesCount: Math.ceil(totalCount / pageSize),
       page: pageNumber,
       pageSize,
-      totalCount: totalCount,
+      totalCount,
       items: posts,
     };
   },

@@ -1,6 +1,6 @@
-import { ObjectId } from "mongodb";
+import { type ObjectId } from 'mongodb';
 
-export type BlogDbType = {
+export interface BlogDbType {
   _id: ObjectId;
   id: string;
   name: string; // max 15
@@ -8,4 +8,4 @@ export type BlogDbType = {
   websiteUrl: string; // max 100 ^https://([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+(\/[a-zA-Z0-9_-]+)*\/?$
   isMembership: boolean;
   createdAt: string;
-};
+}

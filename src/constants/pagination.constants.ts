@@ -2,9 +2,9 @@ export const DefaultPageNumber = 1;
 
 export const DefaultPageSize = 10;
 
-export const DefaultSortBy = "createdAt";
+export const DefaultSortBy = 'createdAt';
 
 export enum Direction {
-  Asc = "asc",
-  Desc = "desc",
+  Asc = 'asc',
+  Desc = 'desc',
 }

@@ -8,6 +8,6 @@ export const createUserController = async (req: Request<any, any, UserInputModel
   const userId = await usersService.createUser(req.body);
   const newUser = await usersRepository.findById(userId);
 
-  console.log(newUser, 'newUser');
-  if (newUser) res.status(HttpStatuses.Created201).json(newUser);
+  if (!newUser) throw new Error('User not created');
+  res.status(HttpStatuses.Created201).json(newUser);
 };

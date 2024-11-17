@@ -56,9 +56,13 @@ export const usersRepository = {
     const isDel = await usersCollection.deleteOne({ _id: new ObjectId(id) });
     return isDel.deletedCount === 1;
   },
-  async findById(id: string): Promise<WithId<UserDbType> | null> {
+  async findById(id: string): Promise<UserViewModel | null> {
     if (!this._checkObjectId(id)) return null;
-    return await usersCollection.findOne({ _id: new ObjectId(id) });
+
+    const newUser = await usersCollection.findOne({ _id: new ObjectId(id) });
+    if (!newUser) return null;
+
+    return this.map(newUser);
   },
   async create(user: UserDbType): Promise<string> {
     const newUser = await usersCollection.insertOne({ ...user });

@@ -6,7 +6,6 @@ import { HttpStatuses } from '../../../constants/httpStatusCode.constants';
 
 export const getUsersController = async (req: Request, res: Response<UsersDto>) => {
   const filters = getUsersQueries(req);
-  console.log(filters, 'filters');
 
   const allUsers = await usersService.getAll(filters);
   res.status(HttpStatuses.Ok200).json(allUsers);

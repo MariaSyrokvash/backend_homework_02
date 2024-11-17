@@ -7,16 +7,8 @@ import { usersCollection } from '../../../db/mongoDb';
 export const usersRepository = {
   async getAll(filters: UsersFilters) {
     const { searchLoginTerm, searchEmailTerm, pageNumber, pageSize, sortBy, sortDirection } = filters;
-    const currentFilters: Filter<UserDbType> = {};
 
-    if (typeof searchLoginTerm === 'string' && searchLoginTerm.trim()) {
-      currentFilters.login = { $regex: searchLoginTerm, $options: 'i' };
-    }
-
-    if (typeof searchEmailTerm === 'string' && searchEmailTerm.trim()) {
-      currentFilters.email = { $regex: searchEmailTerm, $options: 'i' };
-    }
-
+    const currentFilters = this._buildSearchFilters(searchLoginTerm, searchEmailTerm);
     const skip = (pageNumber - 1) * pageSize;
     const sortDirectionFlag = sortDirection === Direction.Asc ? 1 : -1;
 
@@ -29,16 +21,8 @@ export const usersRepository = {
 
     return res.map((user) => this.map(user));
   },
-  async getTotalBlogsCount({ searchLoginTerm, searchEmailTerm }: { searchLoginTerm: string | null; searchEmailTerm: string | null }) {
-    const currentFilters: Filter<UserDbType> = {};
-
-    if (typeof searchLoginTerm === 'string' && searchLoginTerm.trim()) {
-      currentFilters.login = { $regex: searchLoginTerm, $options: 'i' };
-    }
-
-    if (typeof searchEmailTerm === 'string' && searchEmailTerm.trim()) {
-      currentFilters.email = { $regex: searchEmailTerm, $options: 'i' };
-    }
+  async getTotalUsersCount({ searchLoginTerm, searchEmailTerm }: { searchLoginTerm: string | null; searchEmailTerm: string | null }) {
+    const currentFilters = this._buildSearchFilters(searchLoginTerm, searchEmailTerm);
 
     return await usersCollection.countDocuments(currentFilters);
   },
@@ -75,5 +59,26 @@ export const usersRepository = {
     return await usersCollection.findOne({
       $or: [{ email: loginOrEmail }, { login: loginOrEmail }],
     });
+  },
+  _buildSearchFilters(searchLoginTerm: string | null, searchEmailTerm: string | null) {
+    const filters: Filter<UserDbType> = {};
+
+    // Only create $or if at least one search term is provided
+    const orConditions: Array<Filter<UserDbType>> = [];
+
+    if (searchLoginTerm?.trim()) {
+      orConditions.push({ login: { $regex: searchLoginTerm, $options: 'i' } });
+    }
+
+    if (searchEmailTerm?.trim()) {
+      orConditions.push({ email: { $regex: searchEmailTerm, $options: 'i' } });
+    }
+
+    // If any conditions were added, set $or filter
+    if (orConditions.length > 0) {
+      filters.$or = orConditions;
+    }
+
+    return filters;
   },
 };

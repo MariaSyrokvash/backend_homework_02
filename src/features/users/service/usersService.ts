@@ -8,7 +8,7 @@ export const usersService = {
     const { pageSize, pageNumber, searchLoginTerm, searchEmailTerm } = filters;
 
     const blogs = await usersRepository.getAll(filters);
-    const totalCount = await usersRepository.getTotalBlogsCount({
+    const totalCount = await usersRepository.getTotalUsersCount({
       searchLoginTerm,
       searchEmailTerm,
     });

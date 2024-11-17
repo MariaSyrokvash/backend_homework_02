@@ -21,7 +21,7 @@ export const usersRepository = {
     const sortDirectionFlag = sortDirection === Direction.Asc ? 1 : -1;
 
     const res = await usersCollection
-      .find(currentFilters, { projection: { _id: 0 } })
+      .find(currentFilters)
       .skip(skip)
       .limit(pageSize)
       .sort({ [sortBy]: sortDirectionFlag })
@@ -44,7 +44,7 @@ export const usersRepository = {
   },
   map(user: UserDbType) {
     const userForOutput: UserViewModel = {
-      id: user.id,
+      id: user._id.toString(),
       email: user.email,
       login: user.login,
       createdAt: user.createdAt,

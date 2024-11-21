@@ -1,8 +1,8 @@
 import { type Filter, ObjectId, type WithId } from 'mongodb';
-import { type UsersFilters, type UserViewModel } from '../../../input-output-types/users-types';
 import { type UserDbType } from '../../../db/user-db-type';
 import { Direction } from '../../../constants/pagination.constants';
 import { usersCollection } from '../../../db/mongoDb';
+import { type UsersFilters, type UserViewModel } from '../../../types/users.types';
 
 export const usersRepository = {
   async getAll(filters: UsersFilters) {

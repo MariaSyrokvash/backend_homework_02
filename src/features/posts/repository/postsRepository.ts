@@ -1,8 +1,10 @@
 import { type ObjectId } from 'mongodb';
 import { type PostDbType } from '../../../db/post-db-type';
 import { postsCollection } from '../../../db/mongoDb';
-import { type PostInputModel, type PostsFilters, type PostViewModel } from '../../../input-output-types/posts-types';
+
 import { Direction } from '../../../constants/pagination.constants';
+import { type PostInputModel, type PostsFilters } from '../../../types/posts.types';
+import { type PostViewModel } from '../../../types/blogs.types';
 
 export const postsRepository = {
   async createPost(newPost: PostDbType) {

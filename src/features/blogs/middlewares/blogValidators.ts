@@ -11,8 +11,8 @@ import {
 } from '../../../constants/blogs.constants';
 import { blogsService } from '../service/blogsService';
 import { HttpStatuses } from '../../../constants/httpStatusCode.constants';
-import { inputCheckErrorsMiddleware } from '../../../global-middlewares/inputCheckErrorsMiddleware';
-import { adminMiddleware } from '../../../global-middlewares/admin-middleware';
+import { adminAuthGuard } from '../../../middlewares/admin.middlewares';
+import { inputCheckErrors } from '../../../middlewares/inputCheckErrors.middlewares';
 
 // name: string // max 15
 // description: string // max 500
@@ -73,22 +73,22 @@ export const contentValidator = body('content')
   .isLength({ min: MinLength, max: MaxLengthBlogPostContent })
   .withMessage(`more then ${MaxLengthBlogPostContent} or 0`);
 
-const commonBlogValidators = [nameValidator, descriptionValidator, websiteUrlValidator, inputCheckErrorsMiddleware];
+const commonBlogValidators = [nameValidator, descriptionValidator, websiteUrlValidator, inputCheckErrors];
 
 export const getBlogValidators = [findBlogValidator];
 
-export const createBlogValidators = [adminMiddleware, ...commonBlogValidators];
+export const createBlogValidators = [adminAuthGuard, ...commonBlogValidators];
 
-export const updateBlogValidators = [adminMiddleware, findBlogValidator, ...commonBlogValidators];
+export const updateBlogValidators = [adminAuthGuard, findBlogValidator, ...commonBlogValidators];
 
-export const deleteBlogValidators = [adminMiddleware, findBlogValidator];
+export const deleteBlogValidators = [adminAuthGuard, findBlogValidator];
 
 export const createPostInBlogValidators = [
-  adminMiddleware,
+  adminAuthGuard,
   findBlogValidator,
   titleValidator,
   shortDescriptionValidator,
   contentValidator,
 
-  inputCheckErrorsMiddleware,
+  inputCheckErrors,
 ];

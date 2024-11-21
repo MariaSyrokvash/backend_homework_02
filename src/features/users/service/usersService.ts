@@ -1,7 +1,7 @@
-import { type UserInputModel, type UsersDto, type UsersFilters } from '../../../input-output-types/users-types';
 import { usersRepository } from '../repositories/usersRepository';
-import { bcryptService } from '../../../common/adapters/bcrypt.service';
+import { bcryptService } from '../../../adapters/bcrypt.service';
 import { type UserDbType } from '../../../db/user-db-type';
+import { type UserInputModel, type UsersDto, type UsersFilters } from '../../../types/users.types';
 
 export const usersService = {
   async getAll(filters: UsersFilters): Promise<UsersDto> {

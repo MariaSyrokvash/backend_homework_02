@@ -2,9 +2,9 @@ import { type ObjectId } from 'mongodb';
 import { type BlogDbType } from '../../../db/blog-db-type';
 import { blogsCollection, postsCollection } from '../../../db/mongoDb';
 import { type PostDbType } from '../../../db/post-db-type';
-import { type BlogInputModel, type BlogsFilters, type BlogViewModel, type PostsBlogFilters } from '../../../input-output-types/blogs-types';
 import { Direction } from '../../../constants/pagination.constants';
 import { postsRepository } from '../../posts/repository/postsRepository';
+import { type BlogInputModel, type BlogsFilters, type BlogViewModel, type PostsBlogFilters } from '../../../types/blogs.types';
 
 export const blogsRepository = {
   async createBlog(newBlog: BlogDbType): Promise<ObjectId> {

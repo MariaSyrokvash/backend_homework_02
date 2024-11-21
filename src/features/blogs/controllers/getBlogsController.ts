@@ -1,8 +1,9 @@
 import { type Request, type Response } from 'express';
 import { HttpStatuses } from '../../../constants/httpStatusCode.constants';
-import { type BlogsDto } from '../../../input-output-types/blogs-types';
+
 import { getBlogsQueries } from '../helpers';
 import { blogsService } from '../service/blogsService';
+import { type BlogsDto } from '../../../types/blogs.types';
 
 export const getBlogsController = async (req: Request, res: Response<BlogsDto>) => {
   const blogsFilters = getBlogsQueries(req);

@@ -13,9 +13,9 @@ export const fromUTF8ToBase64 = (code: string) => {
   return codedAuth;
 };
 
-export const adminMiddleware = (req: Request, res: Response, next: NextFunction) => {
-  const auth = req.headers.authorization!; // 'Basic xxxx'
-  console.log(auth);
+export const adminAuthGuard = (req: Request, res: Response, next: NextFunction) => {
+  const auth = req.headers.authorization!;
+
   if (!auth) {
     res.status(HttpStatuses.Unauthorized401).json({});
     return;
@@ -25,10 +25,8 @@ export const adminMiddleware = (req: Request, res: Response, next: NextFunction)
     return;
   }
 
-  // const decodedAuth = fromBase64ToUTF8(auth.slice(6))
   const codedAuth = fromUTF8ToBase64(CONFIG.ADMIN);
 
-  // if (decodedAuth !== SETTINGS.ADMIN) {
   if (auth.slice(6) !== codedAuth) {
     res.status(HttpStatuses.Unauthorized401).json({});
     return;

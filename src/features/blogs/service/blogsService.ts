@@ -1,14 +1,15 @@
 import { type ObjectId } from 'mongodb';
+
+import { type BlogDbType } from '../../../db/blog-db-type';
+import { blogsRepository } from '../repository/blogsRepository';
+import { type PostDbType } from '../../../db/post-db-type';
 import {
   type BlogInputModel,
   type BlogPostInputModel,
   type BlogsDto,
   type BlogsFilters,
   type PostsBlogFilters,
-} from '../../../input-output-types/blogs-types';
-import { type BlogDbType } from '../../../db/blog-db-type';
-import { blogsRepository } from '../repository/blogsRepository';
-import { type PostDbType } from '../../../db/post-db-type';
+} from '../../../types/blogs.types';
 
 export const blogsService = {
   async createBlog(blog: BlogInputModel): Promise<ObjectId> {

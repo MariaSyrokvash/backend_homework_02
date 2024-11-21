@@ -1,7 +1,7 @@
 import { type SortDirection } from 'mongodb';
 import { type Request } from 'express';
-import { type BlogsFilters, type PostsBlogFilters } from '../../../input-output-types/blogs-types';
 import { DefaultPageNumber, DefaultPageSize, DefaultSortBy, Direction } from '../../../constants/pagination.constants';
+import { type BlogsFilters, type PostsBlogFilters } from '../../../types/blogs.types';
 
 export const getBlogsQueries = (req: Request): BlogsFilters => {
   const pageNumber = Number(req.query.pageNumber) || DefaultPageNumber;

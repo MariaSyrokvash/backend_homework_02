@@ -1,8 +1,9 @@
 import { type ObjectId } from 'mongodb';
-import { type PostInputModel, type PostsDto, type PostsFilters } from '../../../input-output-types/posts-types';
+
 import { blogsService } from '../../blogs/service/blogsService';
 import { type PostDbType } from '../../../db/post-db-type';
 import { postsRepository } from '../repository/postsRepository';
+import { type PostInputModel, type PostsDto, type PostsFilters } from '../../../types/posts.types';
 
 export const postsService = {
   async createPost(post: PostInputModel) {

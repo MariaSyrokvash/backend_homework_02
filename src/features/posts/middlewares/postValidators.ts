@@ -4,8 +4,8 @@ import { MaxLengthPostContent, MaxLengthPostShortDescription, MaxLengthPostTitle
 import { blogsService } from '../../blogs/service/blogsService';
 import { postsRepository } from '../repository/postsRepository';
 import { HttpStatuses } from '../../../constants/httpStatusCode.constants';
-import { inputCheckErrorsMiddleware } from '../../../global-middlewares/inputCheckErrorsMiddleware';
-import { adminMiddleware } from '../../../global-middlewares/admin-middleware';
+import { adminAuthGuard } from '../../../middlewares/admin.middlewares';
+import { inputCheckErrors } from '../../../middlewares/inputCheckErrors.middlewares';
 
 // title: string // max 30
 // shortDescription: string // max 100
@@ -56,12 +56,12 @@ export const findPostValidator = async (req: Request<{ id: string }>, res: Respo
   next();
 };
 
-const commonPostValidators = [blogIdValidator, titleValidator, shortDescriptionValidator, contentValidator, inputCheckErrorsMiddleware];
+const commonPostValidators = [blogIdValidator, titleValidator, shortDescriptionValidator, contentValidator, inputCheckErrors];
 
 export const getPostValidators = [findPostValidator];
 
-export const createPostValidators = [adminMiddleware, ...commonPostValidators];
+export const createPostValidators = [adminAuthGuard, ...commonPostValidators];
 
-export const updatePostValidators = [adminMiddleware, findPostValidator, ...commonPostValidators];
+export const updatePostValidators = [adminAuthGuard, findPostValidator, ...commonPostValidators];
 
-export const deletePostValidators = [adminMiddleware, findPostValidator];
+export const deletePostValidators = [adminAuthGuard, findPostValidator];

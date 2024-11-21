@@ -1,7 +1,7 @@
 import { type WithId } from 'mongodb';
 import { usersRepository } from '../../users/repositories/usersRepository';
 import { type UserDbType } from '../../../db/user-db-type';
-import { bcryptService } from '../../../common/adapters/bcrypt.service';
+import { bcryptService } from '../../../adapters/bcrypt.service';
 
 export const authService = {
   async loginUser(loginOrEmail: string, password: string): Promise<WithId<UserDbType> | null> {

@@ -14,10 +14,6 @@ export const inputCheckErrors = (req: Request, res: Response<OutputErrorsType>, 
       msg: string;
     }>;
 
-    if (process.env.NODE_ENV !== 'production') {
-      console.log('Validation Errors:', validationErrors);
-    }
-
     res.status(HttpStatuses.BadRequest400).json({
       errorsMessages: validationErrors.map(({ path, msg }) => ({
         field: path,

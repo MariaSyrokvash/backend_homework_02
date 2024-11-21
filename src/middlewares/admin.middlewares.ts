@@ -2,33 +2,32 @@ import { type Response, type Request, type NextFunction } from 'express';
 import { HttpStatuses } from '../constants/httpStatusCode.constants';
 import { CONFIG } from '../config';
 
-export const fromBase64ToUTF8 = (code: string) => {
-  const buff = Buffer.from(code, 'base64');
-  const decodedAuth = buff.toString('utf8');
-  return decodedAuth;
-};
-export const fromUTF8ToBase64 = (code: string) => {
-  const buff2 = Buffer.from(code, 'utf8');
-  const codedAuth = buff2.toString('base64');
-  return codedAuth;
+export const fromBase64ToUTF8 = (base64String: string): string => {
+  return Buffer.from(base64String, 'base64').toString('utf8');
 };
 
-export const adminAuthGuard = (req: Request, res: Response, next: NextFunction) => {
-  const auth = req.headers.authorization!;
+export const fromUTF8ToBase64 = (utf8String: string): string => {
+  return Buffer.from(utf8String, 'utf8').toString('base64');
+};
 
-  if (!auth) {
-    res.status(HttpStatuses.Unauthorized401).json({});
-    return;
-  }
-  if (auth.slice(0, 6) !== 'Basic ') {
-    res.status(HttpStatuses.Unauthorized401).json({});
+export const adminAuthGuard = (req: Request, res: Response, next: NextFunction): void => {
+  const authHeader = req.headers.authorization;
+
+  if (!authHeader) {
+    res.status(HttpStatuses.Unauthorized401).json({ error: 'Authorization header missing' });
     return;
   }
 
-  const codedAuth = fromUTF8ToBase64(CONFIG.ADMIN);
+  if (!authHeader.startsWith('Basic ')) {
+    res.status(HttpStatuses.Unauthorized401).json({ error: 'Invalid authorization format' });
+    return;
+  }
 
-  if (auth.slice(6) !== codedAuth) {
-    res.status(HttpStatuses.Unauthorized401).json({});
+  const providedCredentials = authHeader.slice(6); // Remove "Basic " prefix.
+  const expectedCredentials = fromUTF8ToBase64(CONFIG.ADMIN);
+
+  if (providedCredentials !== expectedCredentials) {
+    res.status(HttpStatuses.Unauthorized401).json({ error: 'Invalid credentials' });
     return;
   }
 

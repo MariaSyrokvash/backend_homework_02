@@ -18,14 +18,14 @@ export const postsRepository = {
   },
   async findAndMap(id: string) {
     const post = await this.getPostById(id); // ! используем этот метод если проверили существование
-    return this._map(post as PostDbType);
+    return this._mapPost(post as PostDbType);
   },
   async findPostByObjectId(id: ObjectId) {
     const post = await postsCollection.findOne({ _id: id });
 
     if (!post) return null;
 
-    return this._map(post);
+    return this._mapPost(post);
   },
   async getAllPosts(filters: PostsFilters) {
     const { pageSize, sortBy, sortDirection, pageNumber } = filters;
@@ -33,13 +33,14 @@ export const postsRepository = {
 
     const skip = (pageNumber - 1) * pageSize;
 
-    const res = await postsCollection
+    const posts = await postsCollection
       .find(currentFilters, { projection: { _id: 0 } })
       .skip(skip)
       .limit(pageSize)
       .sort({ [sortBy]: sortDirection === Direction.Asc ? 1 : -1 })
       .toArray();
-    return res.map((blog) => this._map(blog));
+    console.log(posts, 'RESULT');
+    return this._mapPosts(posts);
   },
   async deletePost(id: string) {
     const res = await postsCollection.deleteOne({ id });
@@ -53,9 +54,9 @@ export const postsRepository = {
   async getTotalPostsCount() {
     return await postsCollection.countDocuments();
   },
-  _map(post: PostDbType) {
+  _mapPost(post: PostDbType) {
     const postForOutput: PostViewModel = {
-      id: post._id.toString(),
+      id: post.id,
       title: post.title,
       shortDescription: post.shortDescription,
       createdAt: post.createdAt,
@@ -64,5 +65,8 @@ export const postsRepository = {
       blogName: post.blogName,
     };
     return postForOutput;
+  },
+  _mapPosts(posts: PostDbType[]) {
+    return posts.map((post) => this._mapPost(post));
   },
 };

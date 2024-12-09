@@ -38,9 +38,10 @@ export const blogIdValidator = body('blogId')
   .withMessage('not string')
   .trim()
   .custom(async (blogId: string) => {
-    const blog = await blogsRepository.findBlogAndMap(blogId);
+    const blog = await blogsRepository.checkExistById(blogId);
+    console.log('Blog existence:', blog);
+
     if (!blog) {
-      // Reject the value if no blog was found with the given blogId
       throw new Error('no blog');
     }
     return true;

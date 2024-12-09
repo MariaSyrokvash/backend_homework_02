@@ -11,5 +11,7 @@ import { type PostsDto } from '../../../types/posts.types';
 export const getPostsController = async (req: Request, res: Response<PostsDto>) => {
   const postsFilters = getPostsQueries(req);
   const posts = await postsService.getAllPosts(postsFilters);
+
+  console.log(posts, 'posts');
   res.status(HttpStatuses.Ok200).json(posts);
 };

@@ -36,7 +36,7 @@ export const blogsQueryRepository = {
   },
   async getOneBlog(id: string): Promise<BlogViewModel | null> {
     if (!this._checkObjectId(id)) return null;
-    const blog = await blogsCollection.findOne({ id });
+    const blog = await blogsCollection.findOne({ _id: new ObjectId(id) });
     if (!blog) return null;
     return this._mapBlog(blog);
   },

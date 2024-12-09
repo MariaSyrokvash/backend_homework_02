@@ -22,6 +22,7 @@ blogsRouter.get('/', async (req: Request, res: Response<BlogsDto>) => {
 
 blogsRouter.get('/:id', async (req: Request<{ id: string }>, res: Response<BlogViewModel>) => {
   const blog = await blogsQueryRepository.getOneBlog(req.params.id);
+
   if (!blog) {
     res.sendStatus(HttpStatuses.NotFound404);
     return;

@@ -1,13 +1,15 @@
 import { type ObjectId } from 'mongodb';
 
-import { blogsService } from '../../blogs/blogs.service';
 import { type PostDbType } from '../../../db/post-db-type';
+
+import { blogsRepository } from '../../blogs/blogs.repository';
 import { postsRepository } from '../repository/postsRepository';
+
 import { type PostInputModel, type PostsDto, type PostsFilters } from '../../../types/posts.types';
 
 export const postsService = {
   async createPost(post: PostInputModel) {
-    const blog = await blogsService.getBlogById(post.blogId);
+    const blog = await blogsRepository.findBlogAndMap(post.blogId);
 
     const newPost = {
       title: post.title,
@@ -46,7 +48,7 @@ export const postsService = {
     return await postsRepository.deletePost(id);
   },
   async updatePost(body: PostInputModel, id: string) {
-    const blog = await blogsService.getBlogById(body.blogId);
+    const blog = await blogsRepository.findBlogAndMap(body.blogId);
     const reqBody = { ...body, blogName: blog.name };
     return await postsRepository.updatePost(reqBody, id);
   },

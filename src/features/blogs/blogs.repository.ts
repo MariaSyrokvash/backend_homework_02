@@ -1,16 +1,13 @@
-import { type ObjectId } from 'mongodb';
-import { type BlogDbType } from '../../db/blog-db-type';
+import { ObjectId, type WithId } from 'mongodb';
 import { blogsCollection, postsCollection } from '../../db/mongoDb';
-import { type PostDbType } from '../../db/post-db-type';
-import { Direction } from '../../constants/pagination.constants';
-import { postsRepository } from '../posts/repository/postsRepository';
-import { type BlogInputModel, type BlogsFilters, type BlogViewModel, type PostsBlogFilters } from '../../types/blogs.types';
+
+import type { BlogDbType } from '../../db/blog-db-type';
+import type { PostDbType } from '../../db/post-db-type';
+import type { BlogInputModel, BlogViewModel, PostViewModel } from '../../types/blogs.types';
 
 export const blogsRepository = {
   async createBlog(newBlog: BlogDbType): Promise<ObjectId> {
     const res = await blogsCollection.insertOne(newBlog);
-    const customId = res.insertedId.toString();
-    await blogsCollection.updateOne({ _id: res.insertedId }, { $set: { id: customId } });
     return res.insertedId;
   },
   async createPost(newPost: PostDbType): Promise<ObjectId> {
@@ -18,53 +15,6 @@ export const blogsRepository = {
     const customId = res.insertedId.toString();
     await postsCollection.updateOne({ _id: res.insertedId }, { $set: { id: customId } });
     return res.insertedId;
-  },
-  async getBlogByUUID(id: ObjectId) {
-    const res = await blogsCollection.findOne({ _id: id }, { projection: { _id: 0 } });
-    if (res) {
-      return this.map(res);
-    }
-    return undefined;
-  },
-
-  async getBlogById(id: string): Promise<BlogDbType> {
-    return (await blogsCollection.findOne({ id }, { projection: { _id: 0 } })) as BlogDbType;
-  },
-  async findAndMap(id: string) {
-    const blog = await this.getBlogById(id); // ! используем этот метод если проверили существование
-    return this.map(blog);
-  },
-  async getAll(filters: BlogsFilters) {
-    const { searchNameTerm, pageNumber, pageSize, sortBy, sortDirection } = filters;
-    const currentFilters: any = {};
-
-    if (searchNameTerm) {
-      currentFilters.name = { $regex: searchNameTerm, $options: 'i' };
-    }
-
-    const skip = (pageNumber - 1) * pageSize;
-
-    const res = await blogsCollection
-      .find(currentFilters, { projection: { _id: 0 } })
-      .skip(skip)
-      .limit(pageSize)
-      .sort({ [sortBy]: sortDirection === Direction.Asc ? 1 : -1 })
-      .toArray();
-    return res.map((blog) => this.map(blog));
-  },
-  async getAllPostByBlogId(blogId: string, filters: PostsBlogFilters) {
-    const { pageSize, pageNumber, sortBy, sortDirection } = filters;
-    const currentFilters: any = {};
-
-    const skip = (pageNumber - 1) * pageSize;
-
-    const posts = await postsCollection
-      .find({ blogId, ...currentFilters }, { projection: { _id: 0 } })
-      .skip(skip)
-      .limit(pageSize)
-      .sort({ [sortBy]: sortDirection === Direction.Asc ? 1 : -1 })
-      .toArray();
-    return posts.map((blog) => postsRepository.map(blog));
   },
   async deleteBlog(id: string) {
     const res = await blogsCollection.deleteOne({ id });
@@ -74,21 +24,28 @@ export const blogsRepository = {
     const res = await blogsCollection.updateOne({ id }, { $set: body });
     return res.matchedCount === 1;
   },
-  async getTotalBlogsCount(searchNameTerm: string | null) {
-    const currentFilters: any = {};
-
-    if (searchNameTerm) {
-      currentFilters.name = { $regex: searchNameTerm, $options: 'i' };
-    }
-
-    return await blogsCollection.countDocuments(currentFilters);
+  async findBlogByObjectIdAndMap(id: ObjectId) {
+    if (!this._checkObjectId(id.toString())) return null;
+    const res = await blogsCollection.findOne({ _id: id });
+    if (!res) return null;
+    return this._map(res);
   },
-  async getTotalPostsCountByBlogId(blogId: string) {
-    return await postsCollection.countDocuments({ blogId });
+  async findAndMapPostById(id: ObjectId): Promise<PostViewModel> {
+    const post = await postsCollection.findOne({ _id: id });
+    return this._mapPost(post!);
   },
-  map(blog: BlogDbType) {
+  async findBlogAndMap(id: string) {
+    const blog = await blogsCollection.findOne({ id });
+    return this._map(blog!);
+  },
+  async checkExistById(id: string): Promise<boolean> {
+    if (!this._checkObjectId(id)) return false;
+    const blog = await blogsCollection.findOne({ id });
+    return !!blog;
+  },
+  _map(blog: WithId<BlogDbType>) {
     const blogForOutput: BlogViewModel = {
-      id: blog.id,
+      id: blog._id.toString(),
       description: blog.description,
       websiteUrl: blog.websiteUrl,
       name: blog.name,
@@ -96,5 +53,20 @@ export const blogsRepository = {
       isMembership: blog.isMembership,
     };
     return blogForOutput;
+  },
+  _mapPost(post: WithId<PostDbType>) {
+    const postForOutput: PostViewModel = {
+      id: post.id,
+      title: post.title,
+      shortDescription: post.shortDescription,
+      createdAt: post.createdAt,
+      content: post.content,
+      blogId: post.blogId,
+      blogName: post.blogName,
+    };
+    return postForOutput;
+  },
+  _checkObjectId(id: string): boolean {
+    return ObjectId.isValid(id);
   },
 };

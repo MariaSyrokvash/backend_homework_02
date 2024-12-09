@@ -45,7 +45,7 @@ export const blogsRepository = {
   },
   _map(blog: WithId<BlogDbType>) {
     const blogForOutput: BlogViewModel = {
-      id: blog._id.toString(),
+      id: blog._id?.toString(),
       description: blog.description,
       websiteUrl: blog.websiteUrl,
       name: blog.name,
@@ -56,7 +56,7 @@ export const blogsRepository = {
   },
   _mapPost(post: WithId<PostDbType>) {
     const postForOutput: PostViewModel = {
-      id: post.id,
+      id: post._id?.toString(),
       title: post.title,
       shortDescription: post.shortDescription,
       createdAt: post.createdAt,

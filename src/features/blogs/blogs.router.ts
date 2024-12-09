@@ -1,16 +1,10 @@
 import { type Request, type Response, Router } from 'express';
-
 import { createBlogValidators, createPostInBlogValidators, deleteBlogValidators, updateBlogValidators } from './middlewares/blogValidators';
-
 import { blogsService } from './blogs.service';
-
 import { blogsRepository } from './blogs.repository';
 import { blogsQueryRepository } from './blogs.query.repository';
-
 import { normalizeBlogsFilters, normalizePostsBlogQueries } from './helpers';
-
 import { HttpStatuses } from '../../constants/httpStatusCode.constants';
-
 import type { BlogInputModel, BlogPostInputModel, BlogsDto, BlogViewModel, PostViewModel } from '../../types/blogs.types';
 import type { PostsDto } from '../../types/posts.types';
 

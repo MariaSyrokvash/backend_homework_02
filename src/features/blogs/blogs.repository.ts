@@ -17,11 +17,11 @@ export const blogsRepository = {
     return res.insertedId;
   },
   async deleteBlog(id: string) {
-    const res = await blogsCollection.deleteOne({ id });
+    const res = await blogsCollection.deleteOne({ _id: new ObjectId(id) });
     return res.deletedCount === 1;
   },
   async updateBlog(body: BlogInputModel, id: string) {
-    const res = await blogsCollection.updateOne({ id }, { $set: body });
+    const res = await blogsCollection.updateOne({ _id: new ObjectId(id) }, { $set: body });
     return res.matchedCount === 1;
   },
   async findBlogByObjectIdAndMap(id: ObjectId) {
@@ -35,12 +35,12 @@ export const blogsRepository = {
     return this._mapPost(post!);
   },
   async findBlogAndMap(id: string) {
-    const blog = await blogsCollection.findOne({ id });
+    const blog = await blogsCollection.findOne({ _id: new ObjectId(id) });
     return this._map(blog!);
   },
   async checkExistById(id: string): Promise<boolean> {
     if (!this._checkObjectId(id)) return false;
-    const blog = await blogsCollection.findOne({ id });
+    const blog = await blogsCollection.findOne({ _id: new ObjectId(id) });
     return !!blog;
   },
   _map(blog: WithId<BlogDbType>) {

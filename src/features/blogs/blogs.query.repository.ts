@@ -20,7 +20,7 @@ export const blogsQueryRepository = {
     const totalCount = await blogsCollection.countDocuments(currentFilters);
 
     const blogs = await blogsCollection
-      .find(currentFilters, { projection: { _id: 0 } })
+      .find(currentFilters)
       .skip(skip)
       .limit(pageSize)
       .sort({ [sortBy]: sortDirection === Direction.Asc ? 1 : -1 })
@@ -63,7 +63,7 @@ export const blogsQueryRepository = {
   },
   _mapBlog(blog: BlogDbType) {
     const blogForOutput: BlogViewModel = {
-      id: blog._id?.toString(),
+      id: blog._id.toString(),
       description: blog.description,
       websiteUrl: blog.websiteUrl,
       name: blog.name,
@@ -77,7 +77,7 @@ export const blogsQueryRepository = {
   },
   _mapPost(post: PostDbType) {
     const postForOutput: PostViewModel = {
-      id: post._id?.toString(),
+      id: post._id.toString(),
       title: post.title,
       shortDescription: post.shortDescription,
       createdAt: post.createdAt,

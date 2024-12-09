@@ -44,6 +44,7 @@ export const blogsRepository = {
     return !!blog;
   },
   _map(blog: WithId<BlogDbType>) {
+    console.log(blog, 'blog');
     const blogForOutput: BlogViewModel = {
       id: blog._id?.toString(),
       description: blog.description,

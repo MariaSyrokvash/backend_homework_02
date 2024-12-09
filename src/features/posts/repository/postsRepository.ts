@@ -1,4 +1,4 @@
-import { type ObjectId } from 'mongodb';
+import { type Filter, type ObjectId } from 'mongodb';
 import { type PostDbType } from '../../../db/post-db-type';
 import { postsCollection } from '../../../db/mongoDb';
 
@@ -21,11 +21,11 @@ export const postsRepository = {
     return this.map(post as PostDbType);
   },
   async getPostByUUID(id: ObjectId) {
-    return (await postsCollection.findOne({ _id: id }, { projection: { _id: 0 } })) as PostDbType;
+    return (await postsCollection.findOne({ _id: id })) as PostDbType;
   },
   async getAllPosts(filters: PostsFilters) {
     const { pageSize, sortBy, sortDirection, pageNumber } = filters;
-    const currentFilters: any = {};
+    const currentFilters: Filter<PostDbType> = {};
 
     const skip = (pageNumber - 1) * pageSize;
 

@@ -1,5 +1,5 @@
 import { type Request, type Response } from 'express';
-import { blogsService } from '../service/blogsService';
+import { blogsService } from '../blogs.service';
 
 import { postsRepository } from '../../posts/repository/postsRepository';
 import { HttpStatuses } from '../../../constants/httpStatusCode.constants';

@@ -1,5 +1,5 @@
 import { type Request, type Response } from 'express';
-import { blogsService } from '../service/blogsService';
+import { blogsService } from '../blogs.service';
 import { HttpStatuses } from '../../../constants/httpStatusCode.constants';
 
 export const delBlogController = async (req: Request<{ id: string }>, res: Response) => {

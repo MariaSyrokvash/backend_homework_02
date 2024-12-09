@@ -1,6 +1,6 @@
 import { type ObjectId } from 'mongodb';
 
-import { blogsService } from '../../blogs/service/blogsService';
+import { blogsService } from '../../blogs/blogs.service';
 import { type PostDbType } from '../../../db/post-db-type';
 import { postsRepository } from '../repository/postsRepository';
 import { type PostInputModel, type PostsDto, type PostsFilters } from '../../../types/posts.types';

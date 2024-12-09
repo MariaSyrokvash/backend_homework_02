@@ -9,7 +9,7 @@ import {
   MaxLengthBlogWebsiteUrl,
   MinLength,
 } from '../../../constants/blogs.constants';
-import { blogsService } from '../service/blogsService';
+import { blogsService } from '../blogs.service';
 import { HttpStatuses } from '../../../constants/httpStatusCode.constants';
 import { adminAuthGuard } from '../../../middlewares/admin.middlewares';
 import { inputCheckErrors } from '../../../middlewares/inputCheckErrors.middlewares';

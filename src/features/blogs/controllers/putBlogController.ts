@@ -1,6 +1,6 @@
 import { type Request, type Response } from 'express';
 import { HttpStatuses } from '../../../constants/httpStatusCode.constants';
-import { blogsService } from '../service/blogsService';
+import { blogsService } from '../blogs.service';
 import { type BlogInputModel } from '../../../types/blogs.types';
 
 export const putBlogController = async (req: Request<{ id: string }, any, BlogInputModel>, res: Response) => {

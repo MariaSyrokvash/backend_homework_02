@@ -5,7 +5,7 @@ import { type PostInputModel, type PostViewModel } from '../../../types/posts.ty
 
 export const createPostController = async (req: Request<any, any, PostInputModel>, res: Response<PostViewModel>) => {
   const newPostId = await postsService.createPost(req.body);
-  const newPost = await postsService.getPostByUUID(newPostId);
+  const newPost = await postsService.getPostByObjectId(newPostId);
 
-  res.status(HttpStatuses.Created201).json(newPost);
+  res.status(HttpStatuses.Created201).json(newPost!);
 };

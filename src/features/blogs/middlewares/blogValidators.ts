@@ -7,7 +7,7 @@ import {
   MaxLengthBlogPostTitle,
   MaxLengthBlogWebsiteUrl,
   MinLength,
-} from '../../../constants/blogs.constants';
+} from '../blogs.constants';
 import { adminAuthGuard } from '../../../middlewares/admin.middlewares';
 import { inputCheckErrors } from '../../../middlewares/inputCheckErrors.middlewares';
 

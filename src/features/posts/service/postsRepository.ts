@@ -28,8 +28,8 @@ export const postsService = {
   async findAndMap(id: string) {
     return await postsRepository.findAndMap(id);
   },
-  async getPostByUUID(id: ObjectId) {
-    return await postsRepository.getPostByUUID(id);
+  async getPostByObjectId(id: ObjectId) {
+    return await postsRepository.findPostByObjectId(id);
   },
   async getAllPosts(filters: PostsFilters): Promise<PostsDto> {
     const { pageSize, pageNumber } = filters;

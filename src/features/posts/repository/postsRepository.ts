@@ -18,10 +18,14 @@ export const postsRepository = {
   },
   async findAndMap(id: string) {
     const post = await this.getPostById(id); // ! используем этот метод если проверили существование
-    return this.map(post as PostDbType);
+    return this._map(post as PostDbType);
   },
-  async getPostByUUID(id: ObjectId) {
-    return (await postsCollection.findOne({ _id: id })) as PostDbType;
+  async findPostByObjectId(id: ObjectId) {
+    const post = await postsCollection.findOne({ _id: id });
+
+    if (!post) return null;
+
+    return this._map(post);
   },
   async getAllPosts(filters: PostsFilters) {
     const { pageSize, sortBy, sortDirection, pageNumber } = filters;
@@ -35,7 +39,7 @@ export const postsRepository = {
       .limit(pageSize)
       .sort({ [sortBy]: sortDirection === Direction.Asc ? 1 : -1 })
       .toArray();
-    return res.map((blog) => this.map(blog));
+    return res.map((blog) => this._map(blog));
   },
   async deletePost(id: string) {
     const res = await postsCollection.deleteOne({ id });
@@ -49,9 +53,9 @@ export const postsRepository = {
   async getTotalPostsCount() {
     return await postsCollection.countDocuments();
   },
-  map(post: PostDbType) {
+  _map(post: PostDbType) {
     const postForOutput: PostViewModel = {
-      id: post.id,
+      id: post._id.toString(),
       title: post.title,
       shortDescription: post.shortDescription,
       createdAt: post.createdAt,

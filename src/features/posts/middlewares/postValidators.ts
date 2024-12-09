@@ -1,7 +1,6 @@
 import { body } from 'express-validator';
 import { type NextFunction, type Request, type Response } from 'express';
-import { MaxLengthPostContent, MaxLengthPostShortDescription, MaxLengthPostTitle, MinLength } from '../../../constants/posts.constants';
-import { blogsService } from '../../blogs/blogs.service';
+import { MaxLengthPostContent, MaxLengthPostShortDescription, MaxLengthPostTitle, MinLength } from '../posts.constants';
 import { postsRepository } from '../repository/postsRepository';
 import { HttpStatuses } from '../../../constants/httpStatusCode.constants';
 import { adminAuthGuard } from '../../../middlewares/admin.middlewares';

@@ -18,6 +18,10 @@ export const postsRepository = {
   },
   async findAndMap(id: string) {
     const post = await this.getPostById(id); // ! используем этот метод если проверили существование
+    console.log(post, 'post');
+
+    if (!post) return null;
+
     return this._mapPost(post as PostDbType);
   },
   async findPostByObjectId(id: ObjectId) {
@@ -34,7 +38,7 @@ export const postsRepository = {
     const skip = (pageNumber - 1) * pageSize;
 
     const posts = await postsCollection
-      .find(currentFilters, { projection: { _id: 0 } })
+      .find(currentFilters)
       .skip(skip)
       .limit(pageSize)
       .sort({ [sortBy]: sortDirection === Direction.Asc ? 1 : -1 })

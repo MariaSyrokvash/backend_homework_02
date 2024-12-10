@@ -24,7 +24,7 @@ export const connectToDB = async (): Promise<boolean> => {
 
     return true;
   } catch (e) {
-    console.log(e, 'e');
+    console.log(e, 'e connectToDB');
     await client.close();
     return false;
   }

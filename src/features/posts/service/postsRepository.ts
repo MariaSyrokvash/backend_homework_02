@@ -5,11 +5,19 @@ import { type PostDbType } from '../../../db/post-db-type';
 import { blogsRepository } from '../../blogs/blogs.repository';
 import { postsRepository } from '../repository/postsRepository';
 
-import { type PostInputModel, type PostsDto, type PostsFilters } from '../../../types/posts.types';
+import { type PostInputModel, type PostsViewModel, type PostsFilters } from '../../../types/posts.types';
 
 export const postsService = {
   async createPost(post: PostInputModel) {
-    const blog = await blogsRepository.findBlogAndMap(post.blogId);
+    const isExistBlog = await blogsRepository.checkExistById(post.blogId);
+    if (!isExistBlog) {
+      return null;
+    }
+    const blog = await blogsRepository.findBlogById(post.blogId);
+
+    if (!blog) {
+      return null;
+    }
 
     const newPost = {
       title: post.title,
@@ -31,7 +39,7 @@ export const postsService = {
   async getPostByObjectId(id: ObjectId) {
     return await postsRepository.findPostByObjectId(id);
   },
-  async getAllPosts(filters: PostsFilters): Promise<PostsDto> {
+  async getAllPosts(filters: PostsFilters): Promise<PostsViewModel> {
     const { pageSize, pageNumber } = filters;
     const posts = await postsRepository.getAllPosts(filters);
     const totalCount = await postsRepository.getTotalPostsCount();
@@ -48,7 +56,10 @@ export const postsService = {
     return await postsRepository.deletePost(id);
   },
   async updatePost(body: PostInputModel, id: string) {
-    const blog = await blogsRepository.findBlogAndMap(body.blogId);
+    const blog = await blogsRepository.findBlogById(body.blogId);
+
+    if (!blog) return false;
+
     const reqBody = { ...body, blogName: blog.name };
     return await postsRepository.updatePost(reqBody, id);
   },

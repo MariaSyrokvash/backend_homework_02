@@ -31,7 +31,7 @@ export interface PostViewModel {
   createdAt: string;
 }
 
-export interface BlogsDto {
+export interface BlogsViewModel {
   pagesCount: number;
   page: number;
   pageSize: number;

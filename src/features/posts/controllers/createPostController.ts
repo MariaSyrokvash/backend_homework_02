@@ -5,7 +5,11 @@ import { type PostInputModel, type PostViewModel } from '../../../types/posts.ty
 
 export const createPostController = async (req: Request<any, any, PostInputModel>, res: Response<PostViewModel>) => {
   const newPostId = await postsService.createPost(req.body);
+  if (!newPostId) throw new Error('Post not created');
+
   const newPost = await postsService.getPostByObjectId(newPostId);
 
-  res.status(HttpStatuses.Created201).json(newPost!);
+  if (!newPost) throw new Error('Post not created');
+
+  res.status(HttpStatuses.Created201).json(newPost);
 };

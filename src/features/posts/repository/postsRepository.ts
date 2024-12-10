@@ -43,7 +43,6 @@ export const postsRepository = {
       .limit(pageSize)
       .sort({ [sortBy]: sortDirection === Direction.Asc ? 1 : -1 })
       .toArray();
-    console.log(posts, 'RESULT');
     return this._mapPosts(posts);
   },
   async deletePost(id: string) {

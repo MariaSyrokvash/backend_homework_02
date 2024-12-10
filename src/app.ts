@@ -15,7 +15,7 @@ app.use(express.json()); // создание свойств-объектов bod
 app.use(cors()); // разрешить любым фронтам делать запросы на наш бэк
 
 app.get('/', (req, res) => {
-  res.status(HttpStatuses.Ok200).json({ version: '1.0' });
+  res.status(HttpStatuses.Ok200).json({ version: '5.0' });
 });
 
 app.use(CONFIG.PATH.AUTH.LOGIN, authRouter);

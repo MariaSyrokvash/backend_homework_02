@@ -1,5 +1,5 @@
-import { type Filter, ObjectId } from 'mongodb';
-import type { BlogsDto, BlogsFilters, BlogViewModel, PostsBlogFilters, PostViewModel } from '../../types/blogs.types';
+import { type Filter, ObjectId, type WithId } from 'mongodb';
+import type { BlogsViewModel, BlogsFilters, BlogViewModel, PostsBlogFilters, PostViewModel } from '../../types/blogs.types';
 
 import { Direction } from '../../constants/pagination.constants';
 
@@ -9,7 +9,7 @@ import type { BlogDbType } from '../../db/blog-db-type';
 import type { PostDbType } from '../../db/post-db-type';
 
 export const blogsQueryRepository = {
-  async getAllBlogs(filters: BlogsFilters): Promise<BlogsDto> {
+  async getAllBlogs(filters: BlogsFilters): Promise<BlogsViewModel> {
     const { searchNameTerm, pageNumber, pageSize, sortBy, sortDirection } = filters;
     const skip = (pageNumber - 1) * pageSize;
     const currentFilters: Filter<BlogDbType> = {};
@@ -40,6 +40,7 @@ export const blogsQueryRepository = {
     if (!blog) return null;
     return this._mapBlog(blog);
   },
+  // TODO: move to posts
   async getAllPostByBlogId(blogId: string, filters: PostsBlogFilters) {
     const { pageSize, pageNumber, sortBy, sortDirection } = filters;
     const currentFilters: Filter<PostDbType> = {};
@@ -61,7 +62,7 @@ export const blogsQueryRepository = {
       items: this._mapPosts(posts),
     };
   },
-  _mapBlog(blog: BlogDbType) {
+  _mapBlog(blog: WithId<BlogDbType>) {
     const blogForOutput: BlogViewModel = {
       id: blog._id.toString(),
       description: blog.description,
@@ -72,7 +73,7 @@ export const blogsQueryRepository = {
     };
     return blogForOutput;
   },
-  _mapBlogs(blogs: BlogDbType[]) {
+  _mapBlogs(blogs: Array<WithId<BlogDbType>>) {
     return blogs.map((blog) => this._mapBlog(blog));
   },
   _mapPost(post: PostDbType) {

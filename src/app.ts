@@ -4,7 +4,7 @@ import { CONFIG } from './config';
 import { blogsRouter } from './features/blogs/blogs.router';
 import { usersRouter } from './features/users';
 import { authRouter } from './features/auth';
-import { postsRouter } from './features/posts';
+import { postsRouter } from './features/posts/posts.router';
 import { testingRouter } from './features/testing';
 
 import { HttpStatuses } from './constants/httpStatusCode.constants';

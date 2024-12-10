@@ -3,7 +3,8 @@ import { createBlogValidators, createPostInBlogValidators, deleteBlogValidators,
 import { blogsService } from './blogs.service';
 import { blogsRepository } from './blogs.repository';
 import { blogsQueryRepository } from './blogs.query.repository';
-import { normalizeBlogsFilters, normalizePostsBlogQueries } from './helpers';
+import { normalizeBlogsFilters } from './helpers';
+import { normalizePostsQueries } from '../posts/helpers';
 import { HttpStatuses } from '../../constants/httpStatusCode.constants';
 import type { PostsViewModel } from '../../types/posts.types';
 import {
@@ -13,8 +14,8 @@ import {
   type BlogViewModel,
   type PostViewModel,
 } from '../../types/blogs.types';
-import { postsService } from '../posts/service/postsRepository';
-import { postsRepository } from '../posts/repository/postsRepository';
+import { postsService } from '../posts/posts.service';
+import { postsQueryRepository } from '../posts/posts.query.repository';
 
 export const blogsRouter = Router();
 
@@ -29,7 +30,6 @@ blogsRouter.get('/', async (req: Request, res: Response<BlogsViewModel>) => {
 // ------------------------------------------------getOneBlog-------------------------------------------//
 blogsRouter.get('/:id', async (req: Request<{ id: string }>, res: Response<BlogViewModel>) => {
   const blog = await blogsQueryRepository.getOneBlog(req.params.id);
-
   if (!blog) {
     res.sendStatus(HttpStatuses.NotFound404);
     return;
@@ -40,15 +40,14 @@ blogsRouter.get('/:id', async (req: Request<{ id: string }>, res: Response<BlogV
 // ---------------------------------getAllPostsInBlog---------------------------------------//
 blogsRouter.get('/:id/posts', async (req: Request<{ id: string }>, res: Response<PostsViewModel>) => {
   const blogId = req.params.id;
-  const filters = normalizePostsBlogQueries(req);
-
+  const filters = normalizePostsQueries(req);
   const isExistBlog = await blogsRepository.checkExistById(blogId);
+
   if (!isExistBlog) {
     res.sendStatus(HttpStatuses.NotFound404);
     return;
   }
-
-  const posts = await blogsQueryRepository.getAllPostByBlogId(blogId, filters);
+  const posts = await postsQueryRepository.getAllPostByBlogId(blogId, filters);
   res.status(HttpStatuses.Ok200).json(posts);
 });
 
@@ -60,7 +59,7 @@ blogsRouter.post('/', ...createBlogValidators, async (req: Request<any, any, Blo
 
   if (!newBlog) {
     // TODO: think status code
-    res.sendStatus(HttpStatuses.BadRequest400);
+    res.sendStatus(HttpStatuses.ServiceUnavailable503);
     return;
   }
   res.status(HttpStatuses.Created201).json(newBlog);
@@ -110,14 +109,11 @@ blogsRouter.post(
       return;
     }
 
-    // TODO: post.query.repo
-    const newPost = await postsRepository.findPostByObjectId(newPostId);
-
+    const newPost = await postsQueryRepository.getOnePost(newPostId);
     if (!newPost) {
       res.sendStatus(HttpStatuses.NotFound404);
       return;
     }
-
     res.status(HttpStatuses.Created201).json(newPost);
   },
 );

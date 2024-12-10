@@ -1,12 +1,10 @@
-import { type ObjectId } from 'mongodb';
-
 export interface PostDbType {
-  _id: ObjectId;
-  id: string;
-  title: string; // max 30
-  shortDescription: string; // max 100
-  content: string; // max 1000
-  blogId: string; // valid
+  // _id: ObjectId;
+  // id: string;
+  title: string;
+  shortDescription: string;
+  content: string;
+  blogId: string;
   blogName: string;
   createdAt: string;
 }

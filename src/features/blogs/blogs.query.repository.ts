@@ -1,12 +1,9 @@
 import { type Filter, ObjectId, type WithId } from 'mongodb';
-import type { BlogsViewModel, BlogsFilters, BlogViewModel, PostsBlogFilters, PostViewModel } from '../../types/blogs.types';
-
+import type { BlogsFilters, BlogsViewModel, BlogViewModel } from '../../types/blogs.types';
 import { Direction } from '../../constants/pagination.constants';
-
-import { blogsCollection, postsCollection } from '../../db/mongoDb';
-
+import { isValidObjectId } from '../../utils/common.utils';
+import { blogsCollection } from '../../db/mongoDb';
 import type { BlogDbType } from '../../db/blog-db-type';
-import type { PostDbType } from '../../db/post-db-type';
 
 export const blogsQueryRepository = {
   async getAllBlogs(filters: BlogsFilters): Promise<BlogsViewModel> {
@@ -35,32 +32,10 @@ export const blogsQueryRepository = {
     };
   },
   async getOneBlog(id: string): Promise<BlogViewModel | null> {
-    if (!this._checkObjectId(id)) return null;
+    if (!isValidObjectId(id)) return null;
     const blog = await blogsCollection.findOne({ _id: new ObjectId(id) });
     if (!blog) return null;
     return this._mapBlog(blog);
-  },
-  // TODO: move to posts
-  async getAllPostByBlogId(blogId: string, filters: PostsBlogFilters) {
-    const { pageSize, pageNumber, sortBy, sortDirection } = filters;
-    const currentFilters: Filter<PostDbType> = {};
-
-    const skip = (pageNumber - 1) * pageSize;
-    const totalCount = await postsCollection.countDocuments({ blogId });
-    const posts = await postsCollection
-      .find({ blogId, ...currentFilters })
-      .skip(skip)
-      .limit(pageSize)
-      .sort({ [sortBy]: sortDirection === Direction.Asc ? 1 : -1 })
-      .toArray();
-
-    return {
-      pagesCount: Math.ceil(totalCount / pageSize),
-      page: pageNumber,
-      pageSize,
-      totalCount,
-      items: this._mapPosts(posts),
-    };
   },
   _mapBlog(blog: WithId<BlogDbType>) {
     const blogForOutput: BlogViewModel = {
@@ -75,23 +50,5 @@ export const blogsQueryRepository = {
   },
   _mapBlogs(blogs: Array<WithId<BlogDbType>>) {
     return blogs.map((blog) => this._mapBlog(blog));
-  },
-  _mapPost(post: PostDbType) {
-    const postForOutput: PostViewModel = {
-      id: post._id.toString(),
-      title: post.title,
-      shortDescription: post.shortDescription,
-      createdAt: post.createdAt,
-      content: post.content,
-      blogId: post.blogId,
-      blogName: post.blogName,
-    };
-    return postForOutput;
-  },
-  _mapPosts(posts: PostDbType[]) {
-    return posts.map((post) => this._mapPost(post));
-  },
-  _checkObjectId(id: string): boolean {
-    return ObjectId.isValid(id);
   },
 };

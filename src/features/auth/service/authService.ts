@@ -1,5 +1,5 @@
 import { type WithId } from 'mongodb';
-import { usersRepository } from '../../users/repositories/usersRepository';
+import { usersRepository } from '../../users/users.repository';
 import { type UserDbType } from '../../../db/user-db-type';
 import { bcryptService } from '../../../adapters/bcrypt.service';
 

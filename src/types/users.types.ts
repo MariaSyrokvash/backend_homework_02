@@ -7,7 +7,7 @@ export interface UserViewModel {
   createdAt: string;
 }
 
-export interface UsersDto {
+export interface UsersViewModel {
   pagesCount: number;
   page: number;
   pageSize: number;

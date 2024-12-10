@@ -1,6 +1,6 @@
 import { type Request, type Response } from 'express';
 import { HttpStatuses } from '../../../constants/httpStatusCode.constants';
-import { usersService } from '../service/usersService';
+import { usersService } from '../users.service';
 
 export const delUserController = async (req: Request<{ id: string }>, res: Response) => {
   const userId = req.params.id;

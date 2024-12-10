@@ -10,7 +10,7 @@ export const createPostController = async (req: Request<any, any, PostInputModel
     res.sendStatus(HttpStatuses.ServiceUnavailable503);
     return;
   }
-  const newPost = await postsQueryRepository.getOnePost(newPostId);
+  const newPost = await postsQueryRepository.getPostById(newPostId);
   if (!newPost) {
     res.sendStatus(HttpStatuses.ServiceUnavailable503);
     return;

@@ -6,14 +6,8 @@ import { blogsQueryRepository } from './blogs.query.repository';
 import { normalizeBlogsFilters } from './helpers';
 import { normalizePostsQueries } from '../posts/helpers';
 import { HttpStatuses } from '../../constants/httpStatusCode.constants';
-import type { PostsViewModel } from '../../types/posts.types';
-import {
-  type BlogInputModel,
-  type BlogPostInputModel,
-  type BlogsViewModel,
-  type BlogViewModel,
-  type PostViewModel,
-} from '../../types/blogs.types';
+import type { PostsViewModel, PostViewModel } from '../../types/posts.types';
+import { type BlogInputModel, type BlogPostInputModel, type BlogsViewModel, type BlogViewModel } from '../../types/blogs.types';
 import { postsService } from '../posts/posts.service';
 import { postsQueryRepository } from '../posts/posts.query.repository';
 
@@ -109,7 +103,7 @@ blogsRouter.post(
       return;
     }
 
-    const newPost = await postsQueryRepository.getOnePost(newPostId);
+    const newPost = await postsQueryRepository.getPostById(newPostId);
     if (!newPost) {
       res.sendStatus(HttpStatuses.NotFound404);
       return;

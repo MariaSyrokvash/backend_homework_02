@@ -24,10 +24,7 @@ export const blogsService = {
   },
   async updateBlog(body: BlogInputModel, id: string) {
     const isExistBlog = await blogsRepository.checkExistById(id);
-
-    if (!isExistBlog) {
-      return false;
-    }
+    if (!isExistBlog) return false;
     return await blogsRepository.updateBlog(body, id);
   },
 };

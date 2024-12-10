@@ -3,8 +3,7 @@ import { Direction } from '../../constants/pagination.constants';
 import { isValidObjectId } from '../../utils/common.utils';
 import { postsCollection } from '../../db/mongoDb';
 import type { PostDbType } from '../../db/post-db-type';
-import type { PostsFilters } from '../../types/posts.types';
-import type { PostViewModel } from '../../types/blogs.types';
+import type { PostsFilters, PostViewModel } from '../../types/posts.types';
 
 export const postsQueryRepository = {
   async getAllPosts(filters: PostsFilters) {
@@ -29,7 +28,7 @@ export const postsQueryRepository = {
       items: this._mapPosts(posts),
     };
   },
-  async getOnePost(id: string): Promise<PostViewModel | null> {
+  async getPostById(id: string): Promise<PostViewModel | null> {
     if (!isValidObjectId(id)) return null;
     const post = await postsCollection.findOne({ _id: new ObjectId(id) });
     if (!post) return null;

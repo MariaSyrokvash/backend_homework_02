@@ -25,6 +25,7 @@ export const contentValidator = body('content')
   .isLength({ min: MinLength, max: MaxLengthPostContent })
   .withMessage(`more then ${MaxLengthPostContent} or 0`);
 
+// TODO: how fix ?
 export const blogIdValidator = body('blogId')
   .isString()
   .withMessage('not string')
@@ -40,9 +41,9 @@ export const blogIdValidator = body('blogId')
   })
   .withMessage('no blog');
 
-const commonPostValidators = [titleValidator, shortDescriptionValidator, contentValidator, inputCheckErrors];
+const commonPostValidators = [blogIdValidator, titleValidator, shortDescriptionValidator, contentValidator, inputCheckErrors];
 
-export const createPostValidators = [adminAuthGuard, blogIdValidator, ...commonPostValidators];
+export const createPostValidators = [adminAuthGuard, ...commonPostValidators];
 
 export const updatePostValidators = [adminAuthGuard, ...commonPostValidators];
 

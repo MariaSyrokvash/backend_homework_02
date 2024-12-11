@@ -3,7 +3,7 @@ import cors from 'cors';
 import { CONFIG } from './config';
 import { blogsRouter } from './features/blogs/blogs.router';
 import { usersRouter } from './features/users/users.router';
-import { authRouter } from './features/auth';
+import { authRouter } from './features/auth/auth.router';
 import { postsRouter } from './features/posts/posts.router';
 import { testingRouter } from './features/testing';
 
